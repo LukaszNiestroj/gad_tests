@@ -10,7 +10,8 @@
     "test": "npx playwright test",
     "test:headed": "npm run test -- --headed",
     "test:ui": "npm run test -- --ui",
-    "show-report": "npx playwright show-report"
+    "show-report": "npx playwright show-report",
+    "tsc:check": "npx tsc --noEmit --pretty --strict"
   },
   "keywords": [],
   "author": "",
