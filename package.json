@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "format": "npx prettier --write .",
+    "format:check": "npx prettier . --check \"!**.ts\"",
     "lint": "npx eslint . --max-warnings=0",
     "prepare": "husky",
     "test": "npx playwright test",
