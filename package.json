@@ -11,7 +11,8 @@
     "test:headed": "npm run test -- --headed",
     "test:ui": "npm run test -- --ui",
     "show-report": "npx playwright show-report",
-    "tsc:check": "npx tsc --noEmit --pretty --strict"
+    "tsc:check": "npx tsc --noEmit --pretty --strict",
+    "test:tag": "npx playwright test --grep \"@GAD-R01-02|@GAD-R01-01\""
   },
   "keywords": [],
   "author": "",
