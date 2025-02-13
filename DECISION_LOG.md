@@ -5,6 +5,7 @@
 1. [Integration of code style tools in framework](#integration-of-code-style-tools-in-framework)
 2. [Use of dotenv in automated tests](#use-of-dotenv-in-automated-tests)
 3. [Use of design patterns like POM, AAA, and composition in automated tests](#use-of-design-patterns-like-pom-aaa-and-composition-in-automated-tests)
+4. [Use of faker in automated test to randomize value](use-of-faker-in-automated-tests)
 
 # Decisions
 
@@ -12,7 +13,6 @@
 
 **ID**: 001  
 **Status**: Decided  
-**Date**: 2023/07/12  
 **Context**:
 We need static code analysis tools for:
 
@@ -31,8 +31,6 @@ We need static code analysis tools for:
 **Cons**: New tools add more complexity to the solution and require maintenance
 
 **Decision**: Use Prettier, ESLint, and Husky to provide high code standard across the framework
-
-**Creator**: Przemek B
 
 ## Use of dotenv in automated tests <a id="use-of-dotenv-in-automated-tests"></a>
 
@@ -57,13 +55,10 @@ We need static code analysis tools for:
 
 **Decision**: Decided
 
-**Creator**: Przemek B
-
 ## Use of design patterns like POM, AAA, and composition in automated tests <a id="use-of-design-patterns-like-pom-aaa-and-composition-in-automated-tests"></a>
 
 **ID**: 003  
 **Status**: Decided  
-**Date**: 2023/07/26  
 **Context**: As our automated test suite grows, we face challenges in maintaining test code readability, reusability, and scalability. We are considering adopting design patterns to improve the overall test structure and maintainability.
 
 **Proposed solution**: Implement the Page Object Model (POM) for UI tests, Arrange-Act-Assert (AAA) pattern for tests, and Composition for creating modular and flexible test components.
@@ -102,3 +97,27 @@ We need static code analysis tools for:
   - Abstraction balance - Overuse of composition might obscure the underlying test logic, making it harder to understand the test flow.
 
 **Decision**: Decided. We will adopt the Page Object Model (POM) for UI tests, Arrange-Act-Assert (AAA) pattern for tests.
+
+**ID**: 004
+
+**Status**: Decided
+
+**Context**: In our automated tests, we often encounter the need to populate test data with realistic but randomized values, such as names, addresses, dates, and other user-specific information.
+
+**Proposed solution**: Integrate the 'faker' library into our automated tests to generate realistic and randomized test data.
+
+**Pros**:
+
+- Realistic test data - The 'faker' library provides a wide range of data generation options, allowing us to create diverse and realistic test scenarios.
+- Time-saving - Automating the data generation process with 'faker' significantly reduces the time spent on writing and maintaining test data setup.
+- Increased test coverage - By using 'faker,' we can easily create various data combinations, enhancing our test suite's coverage.
+
+  **Cons**:
+
+- Dependency management - We need to ensure that the 'faker' library is correctly installed and managed across our test environments.
+- Slower tests - Adding faker slows down test by additional logic and abstraction.
+- Random Data Challenges - Random data produced by faker, in some cases can be inappropriate for our needs, that force additional effort to customize faker outputs.
+
+  **Decision**: Decided.
+
+  ## Use of faker in automated tests <a id="use-of-faker-in-automated-tests"></a>
