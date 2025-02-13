@@ -1,3 +1,4 @@
+import { RegisterUserData } from '../src/models/user.model';
 import { LoginPage } from '../src/pages/login.page';
 import { RegisterPage } from '../src/pages/register.page';
 import { WelcomePage } from '../src/pages/welcome.page';
@@ -11,18 +12,24 @@ test.describe('Verify register', () => {
     async ({ page }) => {
       // Arrange
       const registerPage = new RegisterPage(page);
-      const userFirstName = faker.person.firstName().replace(/[^A-Za-z]/g, '');
-      const userLastName = faker.person.lastName().replace(/[^A-Za-z]/g, '');
-      const email = faker.internet.email({
-        firstName: userFirstName,
-        lastName: userLastName,
-      });
-      const password = faker.internet.password();
       const expectedAlertPopUp = 'User created';
+
+      const registerUserData: RegisterUserData = {
+        userFirstName: faker.person.firstName().replace(/[^A-Za-z]/g, ''),
+        userLastName: faker.person.lastName().replace(/[^A-Za-z]/g, ''),
+        email: '',
+        password: faker.internet.password(),
+      };
+
+      registerUserData.email = faker.internet.email({
+        firstName: registerUserData.userFirstName,
+        lastName: registerUserData.userLastName,
+      });
 
       // Act
       await registerPage.goto();
-      await registerPage.register(userFirstName, userLastName, email, password);
+      await registerPage.register(registerUserData);
+
       // Assert
       await expect(registerPage.registerSuccessfulPopup).toHaveText(
         expectedAlertPopUp,
@@ -33,10 +40,9 @@ test.describe('Verify register', () => {
       expect.soft(titleLogin).toContain('Login');
 
       //Assert
-      await loginPage.login(email, password);
+      await loginPage.login(registerUserData.email, registerUserData.password);
       const welcomePage = new WelcomePage(page);
       const titleAfterLogin = await welcomePage.title();
-      // await loginPage.waitForPageLoadUrl();
       expect(titleAfterLogin).toContain('Welcome');
     },
   );

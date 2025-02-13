@@ -1,3 +1,4 @@
+import { RegisterUserData } from '../models/user.model';
 import { BasePage } from './base.page';
 import { Locator, Page } from '@playwright/test';
 
@@ -21,16 +22,11 @@ export class RegisterPage extends BasePage {
 
     this.registerSuccessfulPopup = this.page.getByTestId('alert-popup');
   }
-  async register(
-    userFirstName: string,
-    userLastName: string,
-    email: string,
-    password: string,
-  ): Promise<void> {
-    await this.userFirstNameInput.fill(userFirstName);
-    await this.userLastNameInput.fill(userLastName);
-    await this.userEmailInput.fill(email);
-    await this.userPasswordInput.fill(password);
+  async register(registerUserData: RegisterUserData): Promise<void> {
+    await this.userFirstNameInput.fill(registerUserData.userFirstName);
+    await this.userLastNameInput.fill(registerUserData.userLastName);
+    await this.userEmailInput.fill(registerUserData.email);
+    await this.userPasswordInput.fill(registerUserData.password);
     await this.registerButton.click();
   }
 }
