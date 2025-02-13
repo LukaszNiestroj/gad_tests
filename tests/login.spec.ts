@@ -1,3 +1,4 @@
+import { LoginUserData } from '../src/models/user.model';
 import { LoginPage } from '../src/pages/login.page';
 import { WelcomePage } from '../src/pages/welcome.page';
 import { testUser1 } from '../src/test-data/user-data';
@@ -10,12 +11,10 @@ test.describe('Verify user login', () => {
     async ({ page }) => {
       // Arrange
       const loginPage = new LoginPage(page);
-      const userEmail = testUser1.userEmail;
-      const userPassword = testUser1.userPassword;
 
       // ACT
       await loginPage.goto();
-      await loginPage.login(userEmail, userPassword);
+      await loginPage.login(testUser1);
       const welcomePage = new WelcomePage(page);
       const title = await welcomePage.title();
 
@@ -30,12 +29,15 @@ test.describe('Verify user login', () => {
     async ({ page }) => {
       // Arrange
       const loginPage = new LoginPage(page);
-      const userEmail = testUser1.userEmail;
-      const userPassword = 'incorrectPass';
+
+      const loginUserData: LoginUserData = {
+        userEmail: testUser1.userEmail,
+        userPassword: 'incorrectPass',
+      };
 
       // ACT
       await loginPage.goto();
-      await loginPage.login(userEmail, userPassword);
+      await loginPage.login(loginUserData);
       const title = await loginPage.title();
 
       // Assert
