@@ -8,7 +8,7 @@ import { expect, test } from '@playwright/test';
 test.describe('Verify register', () => {
   test(
     'register with correct data and login',
-    { tag: ['@GAD-R02-01', '@GAD-R02-03', '@GAD-R02-03', '@register'] },
+    { tag: ['@GAD-R03-01', '@GAD-R03-02', '@GAD-R03-03', '@register'] },
     async ({ page }) => {
       // Arrange
       const registerPage = new RegisterPage(page);
@@ -47,6 +47,57 @@ test.describe('Verify register', () => {
       const welcomePage = new WelcomePage(page);
       const titleAfterLogin = await welcomePage.title();
       expect(titleAfterLogin).toContain('Welcome');
+    },
+  );
+
+  test(
+    'Not register with incorrect data - not valid email',
+    { tag: ['@GAD-R03-04', '@register'] },
+    async ({ page }) => {
+      // Arrange
+      const registerPage = new RegisterPage(page);
+      const expectedErrorMessage = 'Please provide a valid email address';
+
+      const registerUserData: RegisterUserData = {
+        userFirstName: faker.person.firstName().replace(/[^A-Za-z]/g, ''),
+        userLastName: faker.person.lastName().replace(/[^A-Za-z]/g, ''),
+        email: '!@#$',
+        password: faker.internet.password(),
+      };
+
+      // Act
+      await registerPage.goto();
+      await registerPage.register(registerUserData);
+
+      // Assert
+      await expect(registerPage.emailErrorText).toHaveText(
+        expectedErrorMessage,
+      );
+    },
+  );
+
+  test(
+    'Not register with incorrect data - email not provided',
+    { tag: ['@GAD-R03-04', '@register'] },
+    async ({ page }) => {
+      // Arrange
+      const registerPage = new RegisterPage(page);
+      const expectedErrorMessage = 'This field is required';
+      // Act
+      await registerPage.goto();
+      await registerPage.userFirstNameInput.fill(
+        faker.person.firstName().replace(/[^A-Za-z]/g, ''),
+      );
+      await registerPage.userLastNameInput.fill(
+        faker.person.lastName().replace(/[^A-Za-z]/g, ''),
+      );
+      await registerPage.userPasswordInput.fill(faker.internet.password());
+      await registerPage.registerButton.click();
+
+      // Assert
+      await expect(registerPage.emailErrorText).toHaveText(
+        expectedErrorMessage,
+      );
     },
   );
 });
