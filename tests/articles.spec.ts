@@ -1,5 +1,4 @@
 import { randomNewArticle } from '../src/factories/article.factory';
-import { AddArticleModel } from '../src/models/article.model';
 import { ArticlePage } from '../src/pages/article.page';
 import { ArticlesPage } from '../src/pages/articles.page';
 import { LoginPage } from '../src/pages/login.page';
@@ -11,7 +10,6 @@ test.describe('Verify articles', () => {
   let loginPage: LoginPage;
   let articlesPage: ArticlesPage;
   let addArticlesView: AddArticlesView;
-  let articleData: AddArticleModel;
 
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
@@ -22,8 +20,6 @@ test.describe('Verify articles', () => {
     await loginPage.login(testUser1);
     await articlesPage.goto();
 
-    articleData = randomNewArticle();
-
     await articlesPage.mainMenu.addArticleLogged.click();
     await expect.soft(addArticlesView.header).toBeVisible();
   });
@@ -33,6 +29,7 @@ test.describe('Verify articles', () => {
     async ({ page }) => {
       // Arrange
       const articlePage = new ArticlePage(page);
+      const articleData = randomNewArticle();
 
       // ACT
       await addArticlesView.createArticle(articleData);
@@ -51,8 +48,8 @@ test.describe('Verify articles', () => {
     { tag: ['@GAD-R04-01'] },
     async () => {
       // Arrange
-      const articleErrorMessege = 'Article was not created';
-
+      const articleErrorMessage = 'Article was not created';
+      const articleData = randomNewArticle();
       articleData.title = '';
 
       // ACT
@@ -60,7 +57,7 @@ test.describe('Verify articles', () => {
 
       // Assert
       await expect(addArticlesView.articleErrorPopup).toContainText(
-        articleErrorMessege,
+        articleErrorMessage,
       );
     },
   );
@@ -70,7 +67,8 @@ test.describe('Verify articles', () => {
     { tag: ['@GAD-R04-01'] },
     async () => {
       // Arrange
-      const articleErrorMessege = 'Article was not created';
+      const articleErrorMessage = 'Article was not created';
+      const articleData = randomNewArticle();
       articleData.body = '';
 
       // ACT
@@ -78,8 +76,46 @@ test.describe('Verify articles', () => {
 
       // Assert
       await expect(addArticlesView.articleErrorPopup).toContainText(
-        articleErrorMessege,
+        articleErrorMessage,
       );
     },
   );
+
+  test.describe('Title length', () => {
+    test(
+      'creating article with title exceeding 128 signs',
+      { tag: ['@GAD-R04-02'] },
+      async () => {
+        // Arrange
+        const articleErrorMessage = 'Article was not created';
+        const articleData = randomNewArticle(129);
+
+        // ACT
+        await addArticlesView.createArticle(articleData);
+
+        // Assert
+        await expect(addArticlesView.articleErrorPopup).toContainText(
+          articleErrorMessage,
+        );
+      },
+    );
+
+    test(
+      'creating article with title 128 signs',
+      { tag: ['@GAD-R04-02'] },
+      async ({ page }) => {
+        // Arrange
+        const articlePage = new ArticlePage(page);
+        const articleData = randomNewArticle(128);
+
+        // ACT
+        await addArticlesView.createArticle(articleData);
+
+        // Assert
+        await expect
+          .soft(articlePage.articleTitle)
+          .toHaveText(articleData.title);
+      },
+    );
+  });
 });
