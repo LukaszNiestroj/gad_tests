@@ -1,3 +1,4 @@
+import { AddArticleModel } from '../models/article.model';
 import { Locator, Page } from '@playwright/test';
 
 export class AddArticlesView {
@@ -10,5 +11,11 @@ export class AddArticlesView {
     this.articleTitleInput = this.page.getByTestId('title-input');
     this.articleBodyInput = this.page.getByTestId('body-text');
     this.saveButton = this.page.getByTestId('save');
+  }
+
+  async createArticle(addArticle: AddArticleModel): Promise<void> {
+    await this.articleTitleInput.fill(addArticle.title);
+    await this.articleBodyInput.fill(addArticle.body);
+    await this.saveButton.click();
   }
 }
