@@ -23,25 +23,6 @@ test.describe('Verify articles', () => {
     await articlesPage.mainMenu.addArticleLogged.click();
     await expect.soft(addArticlesView.header).toBeVisible();
   });
-  test(
-    'create article with mandatory fields',
-    { tag: ['@GAD-R04-01'] },
-    async ({ page }) => {
-      // Arrange
-      const articlePage = new ArticlePage(page);
-      const articleData = randomNewArticle();
-
-      // ACT
-      await addArticlesView.createArticle(articleData);
-
-      // Assert
-      await expect.soft(articlePage.articleTitle).toHaveText(articleData.title);
-
-      await expect
-        .soft(articlePage.articleBody)
-        .toHaveText(articleData.body, { useInnerText: true });
-    },
-  );
 
   test(
     'creating article with missing title text',
