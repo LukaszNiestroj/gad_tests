@@ -4,9 +4,12 @@ export class MainMenuComponent {
   commentsButton: Locator;
   articlesButton: Locator;
   homePage: Locator;
+  addArticleLogged: Locator;
+
   constructor(private page: Page) {
     this.commentsButton = this.page.getByTestId('open-comments');
     this.articlesButton = this.page.getByTestId('open-articles');
     this.homePage = this.page.getByRole('link', { name: '🦎 GAD' });
+    this.addArticleLogged = this.page.locator('#add-new');
   }
 }
