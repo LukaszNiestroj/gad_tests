@@ -13,15 +13,15 @@ test.describe('Verify articles', () => {
     async ({ page }) => {
       // Arrange
       const loginPage = new LoginPage(page);
+      const articlesPage = new ArticlesPage(page);
+      const addArticlesView = new AddArticlesView(page);
+
       await loginPage.goto();
       await loginPage.login(testUser1);
-
-      const articlesPage = new ArticlesPage(page);
       await articlesPage.goto();
+
       // ACT
       await articlesPage.mainMenu.addArticleLogged.click();
-
-      const addArticlesView = new AddArticlesView(page);
       await expect.soft(addArticlesView.header).toBeVisible();
 
       const articleData = randomNewArticle();
@@ -33,6 +33,67 @@ test.describe('Verify articles', () => {
       await expect
         .soft(articlePage.articleBody)
         .toHaveText(articleData.body, { useInnerText: true });
+    },
+  );
+
+  test(
+    'creating article with missing title text',
+    { tag: ['@GAD-R04-01'] },
+    async ({ page }) => {
+      // Arrange
+      const loginPage = new LoginPage(page);
+      const articlesPage = new ArticlesPage(page);
+      const addArticlesView = new AddArticlesView(page);
+
+      const articleData = randomNewArticle();
+      articleData.title = '';
+      const articleErrorMessege = 'Article was not created';
+
+      await loginPage.goto();
+      await loginPage.login(testUser1);
+      await articlesPage.goto();
+      // ACT
+      await articlesPage.mainMenu.addArticleLogged.click();
+
+      await expect.soft(addArticlesView.header).toBeVisible();
+
+      await addArticlesView.createArticle(articleData);
+
+      // Assert
+      await expect(addArticlesView.articleErrorPopup).toContainText(
+        articleErrorMessege,
+      );
+    },
+  );
+
+  test(
+    'creating article with missing body text',
+    { tag: ['@GAD-R04-01'] },
+    async ({ page }) => {
+      // Arrange
+      const loginPage = new LoginPage(page);
+      const articlesPage = new ArticlesPage(page);
+      const addArticlesView = new AddArticlesView(page);
+
+      const articleData = randomNewArticle();
+      articleData.body = '';
+
+      const articleErrorMessege = 'Article was not created';
+
+      await loginPage.goto();
+      await loginPage.login(testUser1);
+      await articlesPage.goto();
+      // ACT
+      await articlesPage.mainMenu.addArticleLogged.click();
+
+      await expect.soft(addArticlesView.header).toBeVisible();
+
+      await addArticlesView.createArticle(articleData);
+
+      // Assert
+      await expect(addArticlesView.articleErrorPopup).toContainText(
+        articleErrorMessege,
+      );
     },
   );
 });
