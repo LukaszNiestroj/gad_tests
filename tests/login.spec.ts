@@ -11,12 +11,12 @@ test.describe('Verify user login', () => {
     async ({ page }) => {
       // Arrange
       const loginPage = new LoginPage(page);
-      const welcomePage = new WelcomePage(page);
       const expectedWelcomeTitle = 'Welcome';
 
       // ACT
       await loginPage.goto();
       await loginPage.login(testUser1);
+      const welcomePage = new WelcomePage(page);
       const title = await welcomePage.getTitle();
 
       // Assert
