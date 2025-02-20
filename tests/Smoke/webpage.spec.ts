@@ -10,11 +10,12 @@ test.describe('Verify service main page', () => {
     async ({ page }) => {
       // Arrange
       const homePage = new HomePage(page);
+      const expectedHomePageTitle = 'GAD';
       // Act
       await homePage.goto();
       // Assert
       const title = await homePage.getTitle();
-      expect(title).toContain('GAD');
+      expect(title).toContain(expectedHomePageTitle);
     },
   );
 
@@ -24,11 +25,12 @@ test.describe('Verify service main page', () => {
     async ({ page }) => {
       // Arrange
       const articlesPage = new ArticlesPage(page);
+      const expectedArticlesTitle = 'Articles';
       // Act
       await articlesPage.goto();
       // Assert
       const title = await articlesPage.getTitle();
-      expect(title).toContain('Articles');
+      expect(title).toContain(expectedArticlesTitle);
     },
   );
 
@@ -38,18 +40,19 @@ test.describe('Verify service main page', () => {
     async ({ page }) => {
       // Arrange
       const commentsPage = new CommentsPage(page);
+      const expectedCommentsTitle = 'Comments';
       // Act
       await commentsPage.goto();
       // Assert
       const title = await commentsPage.getTitle();
-      expect(title).toContain('Comments');
+      expect(title).toContain(expectedCommentsTitle);
     },
   );
 
-  // test('Home page title simple', async ({ page }) => {
-  //   // Act
-  //   await page.goto('');
-  //   // Assert
-  //   await expect(page).toHaveTitle(/GAD/);
-  // });
+  test('Home page title simple', async ({ page }) => {
+    // Act
+    await page.goto('');
+    // Assert
+    await expect(page).toHaveTitle(/GAD/);
+  });
 });

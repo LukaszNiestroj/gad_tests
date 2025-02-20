@@ -61,6 +61,8 @@ test.describe('Create, verify and delete articles', () => {
   test('user can delete own article', { tag: ['@GAD-R04-04'] }, async () => {
     // Arrange
     await articlesPage.gotoArticle(articleData.title);
+    const expectedArticlesTitle = 'Articles';
+    const expectedNoResultText = 'No data';
 
     // Act
     await articlePage.deleteArticle();
@@ -68,9 +70,9 @@ test.describe('Create, verify and delete articles', () => {
     // Assert
     await articlesPage.waitForPageLoadUrl();
     const title = await articlesPage.getTitle();
-    expect(title).toContain('Articles');
+    expect(title).toContain(expectedArticlesTitle);
 
     await articlesPage.searchArticle(articleData.title);
-    await expect(articlesPage.noResultText).toHaveText('No data');
+    await expect(articlesPage.noResultText).toHaveText(expectedNoResultText);
   });
 });
