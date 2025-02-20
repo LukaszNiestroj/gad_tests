@@ -21,7 +21,7 @@ test.describe('Verify articles', () => {
     await articlesPage.goto();
 
     await articlesPage.mainMenu.addArticleLogged.click();
-    await expect.soft(addArticlesView.header).toBeVisible();
+    await expect.soft(addArticlesView.addNewHeader).toBeVisible();
   });
 
   test(

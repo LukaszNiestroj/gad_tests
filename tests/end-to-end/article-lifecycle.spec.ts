@@ -34,7 +34,7 @@ test.describe('Create, verify and delete articles', () => {
 
       // ACT
       await articlesPage.mainMenu.addArticleLogged.click();
-      await expect.soft(addArticlesView.header).toBeVisible();
+      await expect.soft(addArticlesView.addNewHeader).toBeVisible();
       await addArticlesView.createArticle(articleData);
 
       // Assert
