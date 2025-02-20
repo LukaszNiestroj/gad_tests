@@ -32,7 +32,7 @@ test.describe('Verify register', () => {
         expectedAlertPopUp,
       );
       await loginPage.waitForPageLoadUrl();
-      const titleLogin = await loginPage.title();
+      const titleLogin = await loginPage.getTitle();
       expect.soft(titleLogin).toContain('Login');
 
       //Assert test login
@@ -40,7 +40,7 @@ test.describe('Verify register', () => {
         userEmail: registerUserData.email,
         userPassword: registerUserData.password,
       });
-      const titleAfterLogin = await welcomePage.title();
+      const titleAfterLogin = await welcomePage.getTitle();
       expect(titleAfterLogin).toContain('Welcome');
     },
   );
