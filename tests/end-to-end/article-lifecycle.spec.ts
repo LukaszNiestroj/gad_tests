@@ -1,4 +1,4 @@
-import { randomNewArticle } from '../../src/factories/article.factory';
+import { prepareRandomArticle } from '../../src/factories/article.factory';
 import { AddArticleModel } from '../../src/models/article.model';
 import { ArticlePage } from '../../src/pages/article.page';
 import { ArticlesPage } from '../../src/pages/articles.page';
@@ -30,7 +30,7 @@ test.describe('Create, verify and delete articles', () => {
       // Arrange
       const addArticlesView = new AddArticlesView(page);
 
-      articleData = randomNewArticle();
+      articleData = prepareRandomArticle();
 
       // ACT
       await articlesPage.mainMenu.addArticleLogged.click();
