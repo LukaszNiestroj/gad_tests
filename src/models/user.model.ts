@@ -5,7 +5,7 @@ export interface RegisterUserData {
   password: string;
 }
 
-export interface LoginUserData {
+export interface LoginUserModel {
   userEmail: string;
   userPassword: string;
 }
