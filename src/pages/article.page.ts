@@ -7,9 +7,18 @@ export class ArticlePage extends BasePage {
   mainMenu = new MainMenuComponent(this.page);
   articleTitle: Locator;
   articleBody: Locator;
+  deleteIcon: Locator;
   constructor(page: Page) {
     super(page);
     this.articleTitle = this.page.getByTestId('article-title');
     this.articleBody = this.page.getByTestId('article-body');
+    this.deleteIcon = this.page.getByTestId('delete');
+  }
+
+  async deleteArticle(): Promise<void> {
+    this.page.on('dialog', async (dialog) => {
+      await dialog.accept();
+    });
+    this.deleteIcon.click();
   }
 }
