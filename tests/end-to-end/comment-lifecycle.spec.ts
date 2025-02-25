@@ -2,6 +2,7 @@ import { prepareRandomArticle } from '../../src/factories/article.factory';
 import { AddArticleModel } from '../../src/models/article.model';
 import { ArticlePage } from '../../src/pages/article.page';
 import { ArticlesPage } from '../../src/pages/articles.page';
+import { CommentPage } from '../../src/pages/comment.page';
 import { LoginPage } from '../../src/pages/login.page';
 import { testUser1 } from '../../src/test-data/user-data';
 import { AddArticlesView } from '../../src/views/addArticle.view';
@@ -15,6 +16,7 @@ test.describe('Create, verify and delete comment', () => {
   let articlePage: ArticlePage;
   let addArticlesView: AddArticlesView;
   let addCommentView: AddCommentView;
+  let commentPage: CommentPage;
 
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
@@ -22,6 +24,7 @@ test.describe('Create, verify and delete comment', () => {
     articlesPage = new ArticlesPage(page);
     addArticlesView = new AddArticlesView(page);
     addCommentView = new AddCommentView(page);
+    commentPage = new CommentPage(page);
 
     articleData = prepareRandomArticle();
 
@@ -51,7 +54,14 @@ test.describe('Create, verify and delete comment', () => {
       expectedCommentCreatedPopup,
     );
     // await page.getByText('asdasd', { exact: true }).click();
+    // Verify new comment
     // ACT
+    const articleComment = articlePage.getArticleComment(newCommentText);
+    await expect(articleComment.body).toHaveText(newCommentText);
+
+    await articleComment.link.click();
+
     // Assert
+    await expect(commentPage.commentBody).toHaveText(newCommentText);
   });
 });
