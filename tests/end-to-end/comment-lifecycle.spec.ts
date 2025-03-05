@@ -1,6 +1,7 @@
 import { prepareRandomArticle } from '../../src/factories/article.factory';
 import { prepareRandomComment } from '../../src/factories/comment.factory';
 import { AddArticleModel } from '../../src/models/article.model';
+import { AddCommentModel } from '../../src/models/comment.model';
 import { ArticlePage } from '../../src/pages/article.page';
 import { ArticlesPage } from '../../src/pages/articles.page';
 import { CommentPage } from '../../src/pages/comment.page';
@@ -38,51 +39,65 @@ test.describe('Create, verify and delete comment', () => {
     await articlesPage.mainMenu.addArticleLogged.click();
     await addArticlesView.createArticle(articleData);
   });
-  test('create new comment', { tag: ['@GAD-R05-01'] }, async ({}) => {
-    // Create new comment
+  test('Operate on comment', { tag: ['@GAD-R05-01'] }, async () => {
     // Arrange
-    const expectedAddCommentHeader = 'Add New Comment';
-    const expectedCommentCreatedPopup = 'Comment was created';
     const newCommentData = prepareRandomComment();
-    const expectedCommentUpdatedPopup = 'Comment was updated';
 
     // ACT
-    await articlePage.addCommentButton.click();
-    await expect(addCommentView.addNewHeader).toHaveText(
-      expectedAddCommentHeader,
-    );
-    await addCommentView.createComment(newCommentData);
+    await test.step('Create new comment', async () => {
+      // Arrange
+      const expectedAddCommentHeader = 'Add New Comment';
+      const expectedCommentCreatedPopup = 'Comment was created';
 
-    // Assert
-    await expect(articlePage.alertPopup).toHaveText(
-      expectedCommentCreatedPopup,
-    );
-    // Verify new comment
-    // ACT
-    const articleComment = articlePage.getArticleComment(newCommentData.body);
-    await expect(articleComment.body).toHaveText(newCommentData.body);
+      // ACT
+      await articlePage.addCommentButton.click();
+      await expect
+        .soft(addCommentView.addNewHeader)
+        .toHaveText(expectedAddCommentHeader);
+      await addCommentView.createComment(newCommentData);
 
-    await articleComment.link.click();
+      // Assert
+      await expect
+        .soft(articlePage.alertPopup)
+        .toHaveText(expectedCommentCreatedPopup);
+    });
 
-    // Assert
-    await expect(commentPage.commentBody).toHaveText(newCommentData.body);
+    await test.step('Verify comment', async () => {
+      // ACT
+      const articleComment = articlePage.getArticleComment(newCommentData.body);
+      await expect(articleComment.body).toHaveText(newCommentData.body);
+      await articleComment.link.click();
 
-    // Edit comment
-    // Arrange
-    const editCommentData = prepareRandomComment();
+      // Assert
+      await expect(commentPage.commentBody).toHaveText(newCommentData.body);
+    });
 
-    // ACT
-    await commentPage.editButton.click();
-    await editCommentView.updateComment(editCommentData);
-    // Assert
-    await expect(commentPage.commentBody).toHaveText(editCommentData.body);
-    await expect(commentPage.alertPopup).toHaveText(
-      expectedCommentUpdatedPopup,
-    );
-    await commentPage.returnLink.click();
-    const updatedArticleComment = articlePage.getArticleComment(
-      editCommentData.body,
-    );
-    await expect(updatedArticleComment.body).toHaveText(editCommentData.body);
+    let editCommentData: AddCommentModel;
+    await test.step('Update comment', async () => {
+      // Arrange
+      const expectedCommentUpdatedPopup = 'Comment was updated';
+      editCommentData = prepareRandomComment();
+
+      // ACT
+      await commentPage.editButton.click();
+      await editCommentView.updateComment(editCommentData);
+
+      // Assert
+      await expect
+        .soft(commentPage.alertPopup)
+        .toHaveText(expectedCommentUpdatedPopup);
+      await expect(commentPage.commentBody).toHaveText(editCommentData.body);
+    });
+
+    await test.step('Verify updated comment in article page', async () => {
+      // ACT
+      await commentPage.returnLink.click();
+      const updatedArticleComment = articlePage.getArticleComment(
+        editCommentData.body,
+      );
+
+      // Assert
+      await expect(updatedArticleComment.body).toHaveText(editCommentData.body);
+    });
   });
 });
