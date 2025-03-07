@@ -33,12 +33,12 @@ export class ArticlePage extends BasePage {
 
   getArticleComment(body: string): ArticleComment {
     const commentContainer = this.page
-      .locator('#containerComments')
+      .locator('.comment-container.item-card')
       .filter({ hasText: body });
 
     return {
-      body: commentContainer.locator(':text("comment:") + span'),
       link: commentContainer.locator("[id^='gotoComment']"),
+      body: commentContainer.locator(':text("comment:") + span'),
     };
   }
 }
