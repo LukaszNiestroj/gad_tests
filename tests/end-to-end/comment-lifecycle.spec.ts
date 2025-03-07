@@ -99,5 +99,20 @@ test.describe('Create, verify and delete comment', () => {
       // Assert
       await expect(updatedArticleComment.body).toHaveText(editCommentData.body);
     });
+
+    await test.step('create and verify second comment', async () => {
+      // Arrange
+      const secondCommentData = prepareRandomComment();
+      // Act
+      await articlePage.addCommentButton.click();
+      await addCommentView.createComment(secondCommentData);
+      // Assert
+      const articleComment = articlePage.getArticleComment(
+        secondCommentData.body,
+      );
+      await expect(articleComment.body).toHaveText(secondCommentData.body);
+      await articleComment.link.click();
+      await expect(commentPage.commentBody).toHaveText(secondCommentData.body);
+    });
   });
 });
