@@ -24,7 +24,10 @@ export default [
   eslintPluginPlaywright.configs['flat/recommended'],
   {
     rules: {
+      '@typescript-eslint/explicit-function-return-type': 'error',
+      'no-console': 'warn',
       'playwright/no-nested-step': 'off',
+      'prettier/prettier': 'warn',
     },
     settings: {
       playwright: {
