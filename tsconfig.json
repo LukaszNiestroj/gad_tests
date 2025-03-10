@@ -4,7 +4,11 @@
     "strict": true,
     "module": "CommonJS",
     "sourceMap": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@_src/*": ["src/*"]
+    }
   },
   "exclude": ["node_modules", "playwright-report", "test-results"]
 }
