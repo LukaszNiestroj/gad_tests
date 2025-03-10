@@ -7,7 +7,8 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
-      "@_src/*": ["src/*"]
+      "@_src/*": ["src/*"],
+      "@_pw-config": ["playwright.config.ts"]
     }
   },
   "exclude": ["node_modules", "playwright-report", "test-results"]

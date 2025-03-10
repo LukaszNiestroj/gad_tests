@@ -1,4 +1,4 @@
-import { STORAGE_STATE } from '../playwright.config';
+import { STORAGE_STATE } from '@_pw-config';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 
