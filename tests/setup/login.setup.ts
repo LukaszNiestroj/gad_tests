@@ -8,11 +8,11 @@ setup('login with correct credentials', async ({ page }) => {
   // Arrange
   const expectedWelcomeTitle = 'Welcome';
   const loginPage = new LoginPage(page);
-  const welcomePage = new WelcomePage(page);
 
   // ACT
   await loginPage.goto();
   await loginPage.login(testUser1);
+  const welcomePage = new WelcomePage(page);
   const title = await welcomePage.getTitle();
 
   // Assert
