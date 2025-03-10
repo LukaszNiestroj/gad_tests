@@ -5,15 +5,12 @@ import { AddCommentModel } from '../../src/models/comment.model';
 import { ArticlePage } from '../../src/pages/article.page';
 import { ArticlesPage } from '../../src/pages/articles.page';
 import { CommentPage } from '../../src/pages/comment.page';
-import { LoginPage } from '../../src/pages/login.page';
-import { testUser1 } from '../../src/test-data/user-data';
 import { AddArticlesView } from '../../src/views/addArticle.view';
 import { AddCommentView } from '../../src/views/addComment.view';
 import { EditCommentView } from '../../src/views/editComment.view';
 import { expect, test } from '@playwright/test';
 
 test.describe('Create, verify and delete comment', () => {
-  let loginPage: LoginPage;
   let articlesPage: ArticlesPage;
   let articleData: AddArticleModel;
   let articlePage: ArticlePage;
@@ -23,7 +20,6 @@ test.describe('Create, verify and delete comment', () => {
   let editCommentView: EditCommentView;
 
   test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
     articlePage = new ArticlePage(page);
     articlesPage = new ArticlesPage(page);
     addArticlesView = new AddArticlesView(page);
@@ -33,15 +29,13 @@ test.describe('Create, verify and delete comment', () => {
 
     articleData = prepareRandomArticle();
 
-    await loginPage.goto();
-    await loginPage.login(testUser1);
     await articlesPage.goto();
     await articlesPage.mainMenu.addArticleLogged.click();
     await addArticlesView.createArticle(articleData);
   });
   test(
     'Operate on comment',
-    { tag: ['@GAD-R05-01', '@GAD-R05-02'] },
+    { tag: ['@GAD-R05-01', '@GAD-R05-02', '@logged'] },
     async () => {
       // Arrange
       const newCommentData = prepareRandomComment();
@@ -127,7 +121,7 @@ test.describe('Create, verify and delete comment', () => {
   );
   test(
     'User can create more than one comment',
-    { tag: ['@GAD-R05-03'] },
+    { tag: ['@GAD-R05-03', '@logged'] },
     async () => {
       await test.step('Create new comment', async () => {
         // Arrange

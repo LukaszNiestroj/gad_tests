@@ -1,8 +1,8 @@
-import { prepareRandomUser } from '../src/factories/user.factory';
-import { RegisterUserModel } from '../src/models/user.model';
-import { LoginPage } from '../src/pages/login.page';
-import { RegisterPage } from '../src/pages/register.page';
-import { WelcomePage } from '../src/pages/welcome.page';
+import { prepareRandomUser } from '../../src/factories/user.factory';
+import { RegisterUserModel } from '../../src/models/user.model';
+import { LoginPage } from '../../src/pages/login.page';
+import { RegisterPage } from '../../src/pages/register.page';
+import { WelcomePage } from '../../src/pages/welcome.page';
 import { expect, test } from '@playwright/test';
 
 test.describe('Verify register', () => {
@@ -16,7 +16,9 @@ test.describe('Verify register', () => {
   });
   test(
     'register with correct data and login',
-    { tag: ['@GAD-R03-01', '@GAD-R03-02', '@GAD-R03-03', '@register'] },
+    {
+      tag: ['@GAD-R03-01', '@GAD-R03-02', '@GAD-R03-03', '@register'],
+    },
     async ({ page }) => {
       // Arrange
       const expectedAlertPopUp = 'User created';
