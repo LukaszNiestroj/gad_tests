@@ -1,19 +1,25 @@
 import { ArticlesPage } from '@_src/pages/articles.page';
 import { CommentsPage } from '@_src/pages/comments.page';
 import { HomePage } from '@_src/pages/home.page';
+import { AddArticlesView } from '@_src/views/addArticle.view';
 import { Locator, Page } from '@playwright/test';
 
 export class MainMenuComponent {
   commentsButton: Locator;
   articlesButton: Locator;
   homePageLink: Locator;
-  addArticleLogged: Locator;
+  addArticleButtonLogged: Locator;
 
   constructor(private page: Page) {
     this.commentsButton = this.page.getByTestId('open-comments');
     this.articlesButton = this.page.getByTestId('open-articles');
     this.homePageLink = this.page.getByRole('link', { name: '🦎 GAD' });
-    this.addArticleLogged = this.page.locator('#add-new');
+    this.addArticleButtonLogged = this.page.locator('#add-new');
+  }
+
+  async clickAddArticleButtonLogged(): Promise<AddArticlesView> {
+    await this.addArticleButtonLogged.click();
+    return new AddArticlesView(this.page);
   }
 
   async clickCommentsButton(): Promise<CommentsPage> {
