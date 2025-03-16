@@ -1,4 +1,5 @@
 import { AddArticleModel } from '@_src/models/article.model';
+import { ArticlePage } from '@_src/pages/article.page';
 import { Locator, Page } from '@playwright/test';
 
 export class AddArticlesView {
@@ -17,9 +18,11 @@ export class AddArticlesView {
     this.articleErrorPopup = this.page.getByTestId('alert-popup');
   }
 
-  async createArticle(addArticle: AddArticleModel): Promise<void> {
+  async createArticle(addArticle: AddArticleModel): Promise<ArticlePage> {
     await this.articleTitleInput.fill(addArticle.title);
     await this.articleBodyInput.fill(addArticle.body);
     await this.saveButton.click();
+
+    return new ArticlePage(this.page);
   }
 }

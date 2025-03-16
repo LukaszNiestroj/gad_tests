@@ -1,5 +1,4 @@
 import { prepareRandomArticle } from '@_src/factories/article.factory';
-import { ArticlePage } from '@_src/pages/article.page';
 import { ArticlesPage } from '@_src/pages/articles.page';
 import { AddArticlesView } from '@_src/views/addArticle.view';
 import { expect, test } from '@playwright/test';
@@ -75,13 +74,12 @@ test.describe('Verify articles', () => {
     test(
       'creating article with title 128 signs',
       { tag: ['@GAD-R04-02', '@logged'] },
-      async ({ page }) => {
+      async () => {
         // Arrange
-        const articlePage = new ArticlePage(page);
         const articleData = prepareRandomArticle(128);
 
         // ACT
-        await addArticlesView.createArticle(articleData);
+        const articlePage = await addArticlesView.createArticle(articleData);
 
         // Assert
         await expect

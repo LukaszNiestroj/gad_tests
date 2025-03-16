@@ -17,7 +17,7 @@ test.describe('Verify register', () => {
     {
       tag: ['@GAD-R03-01', '@GAD-R03-02', '@GAD-R03-03', '@register'],
     },
-    async ({}) => {
+    async () => {
       // Arrange
       const expectedAlertPopUp = 'User created';
       const expectedLoginTitle = 'Login';

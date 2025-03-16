@@ -1,6 +1,5 @@
 import { prepareRandomArticle } from '@_src/factories/article.factory';
 import { AddArticleModel } from '@_src/models/article.model';
-import { ArticlePage } from '@_src/pages/article.page';
 import { ArticlesPage } from '@_src/pages/articles.page';
 import { expect, test } from '@playwright/test';
 
@@ -8,10 +7,8 @@ test.describe.configure({ mode: 'serial' });
 test.describe('Create, verify and delete articles', () => {
   let articlesPage: ArticlesPage;
   let articleData: AddArticleModel;
-  let articlePage: ArticlePage;
 
   test.beforeEach(async ({ page }) => {
-    articlePage = new ArticlePage(page);
     articlesPage = new ArticlesPage(page);
 
     await articlesPage.goto();
@@ -19,7 +16,7 @@ test.describe('Create, verify and delete articles', () => {
   test(
     'create article with mandatory fields',
     { tag: ['@GAD-R04-01', '@logged'] },
-    async ({}) => {
+    async () => {
       // Arrange
       articleData = prepareRandomArticle();
 
@@ -27,7 +24,8 @@ test.describe('Create, verify and delete articles', () => {
       const addArticlesView =
         await articlesPage.mainMenu.clickAddArticleButtonLogged();
       await expect.soft(addArticlesView.addNewHeader).toBeVisible();
-      await addArticlesView.createArticle(articleData);
+      // await addArticlesView.createArticle(articleData);
+      const articlePage = await addArticlesView.createArticle(articleData);
 
       // Assert
       await expect.soft(articlePage.articleTitle).toHaveText(articleData.title);

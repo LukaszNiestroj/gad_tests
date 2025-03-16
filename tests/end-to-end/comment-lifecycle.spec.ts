@@ -14,14 +14,12 @@ test.describe('Create, verify and delete comment', () => {
   let addArticlesView: AddArticlesView;
 
   test.beforeEach(async ({ page }) => {
-    articlePage = new ArticlePage(page);
     articlesPage = new ArticlesPage(page);
-
     articleData = prepareRandomArticle();
 
     await articlesPage.goto();
     addArticlesView = await articlesPage.mainMenu.clickAddArticleButtonLogged();
-    await addArticlesView.createArticle(articleData);
+    articlePage = await addArticlesView.createArticle(articleData);
   });
   test(
     'Operate on comment',
