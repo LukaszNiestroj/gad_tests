@@ -24,7 +24,7 @@ export class CommentPage extends BasePage {
     return new EditCommentView(this.page);
   }
 
-  async clickReturnLink(): Promise<ArticlePage>{
+  async clickReturnLink(): Promise<ArticlePage> {
     await this.returnLink.click();
     return new ArticlePage(this.page);
   }
