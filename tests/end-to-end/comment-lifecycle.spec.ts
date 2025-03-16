@@ -35,11 +35,11 @@ test.describe('Create, verify and delete comment', () => {
         const expectedCommentCreatedPopup = 'Comment was created';
 
         // ACT
-        const addCommentView = await articlePage.clickCommentButton();
+        const addCommentView = await articlePage.clickAddCommentButton();
         await expect
           .soft(addCommentView.addNewHeader)
           .toHaveText(expectedAddCommentHeader);
-        await addCommentView.createComment(newCommentData);
+        articlePage = await addCommentView.createComment(newCommentData);
 
         // Assert
         await expect
@@ -47,13 +47,12 @@ test.describe('Create, verify and delete comment', () => {
           .toHaveText(expectedCommentCreatedPopup);
       });
 
-      const commentPage = await test.step('Verify comment', async () => {
+      let commentPage = await test.step('Verify comment', async () => {
         // ACT
         const articleComment = articlePage.getArticleComment(
           newCommentData.body,
         );
         await expect(articleComment.body).toHaveText(newCommentData.body);
-        // await articleComment.lnk.click();
         const commentPage = await articlePage.clickCommentLink(
           articleComment.link,
         );
@@ -71,9 +70,8 @@ test.describe('Create, verify and delete comment', () => {
         editCommentData = prepareRandomComment();
 
         // ACT
-        // await commentPage.editButton.click();
         const editCommentView = await commentPage.clickEditButton();
-        await editCommentView.updateComment(editCommentData);
+        commentPage = await editCommentView.updateComment(editCommentData);
 
         // Assert
         await expect
@@ -99,8 +97,8 @@ test.describe('Create, verify and delete comment', () => {
         // Arrange
         const secondCommentData = prepareRandomComment();
         // Act
-        const addCommentView = await articlePage.clickCommentButton();
-        await addCommentView.createComment(secondCommentData);
+        const addCommentView = await articlePage.clickAddCommentButton();
+        articlePage = await addCommentView.createComment(secondCommentData);
         // Assert
         const articleComment = articlePage.getArticleComment(
           secondCommentData.body,
@@ -123,8 +121,8 @@ test.describe('Create, verify and delete comment', () => {
         const newCommentData = prepareRandomComment();
 
         // ACT
-        const addCommentView = await articlePage.clickCommentButton();
-        await addCommentView.createComment(newCommentData);
+        const addCommentView = await articlePage.clickAddCommentButton();
+        articlePage = await addCommentView.createComment(newCommentData);
 
         // Assert
         await expect
@@ -136,8 +134,8 @@ test.describe('Create, verify and delete comment', () => {
         const secondCommentBody =
           await test.step('create second comment', async () => {
             const secondCommentData = prepareRandomComment();
-            const addCommentView = await articlePage.clickCommentButton();
-            await addCommentView.createComment(secondCommentData);
+            const addCommentView = await articlePage.clickAddCommentButton();
+            articlePage = await addCommentView.createComment(secondCommentData);
             return secondCommentData.body;
           });
         await test.step('verify second comment', async () => {

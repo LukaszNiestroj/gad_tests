@@ -27,7 +27,7 @@ export class ArticlePage extends BasePage {
     this.alertPopup = this.page.getByTestId('alert-popup');
   }
 
-  async clickCommentButton(): Promise<AddCommentView> {
+  async clickAddCommentButton(): Promise<AddCommentView> {
     await this.addCommentButton.click();
     return new AddCommentView(this.page);
   }
