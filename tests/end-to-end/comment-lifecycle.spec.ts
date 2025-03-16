@@ -4,21 +4,19 @@ import { AddArticleModel } from '@_src/models/article.model';
 import { AddCommentModel } from '@_src/models/comment.model';
 import { ArticlePage } from '@_src/pages/article.page';
 import { ArticlesPage } from '@_src/pages/articles.page';
-import { AddArticlesView } from '@_src/views/addArticle.view';
 import { expect, test } from '@playwright/test';
 
 test.describe('Create, verify and delete comment', () => {
-  let articlesPage: ArticlesPage;
   let articleData: AddArticleModel;
   let articlePage: ArticlePage;
-  let addArticlesView: AddArticlesView;
 
   test.beforeEach(async ({ page }) => {
-    articlesPage = new ArticlesPage(page);
+    const articlesPage = new ArticlesPage(page);
     articleData = prepareRandomArticle();
 
     await articlesPage.goto();
-    addArticlesView = await articlesPage.mainMenu.clickAddArticleButtonLogged();
+    const addArticlesView =
+      await articlesPage.mainMenu.clickAddArticleButtonLogged();
     articlePage = await addArticlesView.createArticle(articleData);
   });
   test(
