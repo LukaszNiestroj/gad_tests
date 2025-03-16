@@ -4,9 +4,7 @@ import { AddArticleModel } from '@_src/models/article.model';
 import { AddCommentModel } from '@_src/models/comment.model';
 import { ArticlePage } from '@_src/pages/article.page';
 import { ArticlesPage } from '@_src/pages/articles.page';
-import { CommentPage } from '@_src/pages/comment.page';
 import { AddArticlesView } from '@_src/views/addArticle.view';
-import { AddCommentView } from '@_src/views/addComment.view';
 import { EditCommentView } from '@_src/views/editComment.view';
 import { expect, test } from '@playwright/test';
 
@@ -15,16 +13,12 @@ test.describe('Create, verify and delete comment', () => {
   let articleData: AddArticleModel;
   let articlePage: ArticlePage;
   let addArticlesView: AddArticlesView;
-  let addCommentView: AddCommentView;
-  let commentPage: CommentPage;
   let editCommentView: EditCommentView;
 
   test.beforeEach(async ({ page }) => {
     articlePage = new ArticlePage(page);
     articlesPage = new ArticlesPage(page);
     addArticlesView = new AddArticlesView(page);
-    addCommentView = new AddCommentView(page);
-    commentPage = new CommentPage(page);
     editCommentView = new EditCommentView(page);
 
     articleData = prepareRandomArticle();
@@ -47,7 +41,7 @@ test.describe('Create, verify and delete comment', () => {
         const expectedCommentCreatedPopup = 'Comment was created';
 
         // ACT
-        await articlePage.addCommentButton.click();
+        const addCommentView = await articlePage.clickCommentButton();
         await expect
           .soft(addCommentView.addNewHeader)
           .toHaveText(expectedAddCommentHeader);
@@ -59,16 +53,21 @@ test.describe('Create, verify and delete comment', () => {
           .toHaveText(expectedCommentCreatedPopup);
       });
 
-      await test.step('Verify comment', async () => {
+      const commentPage = await test.step('Verify comment', async () => {
         // ACT
         const articleComment = articlePage.getArticleComment(
           newCommentData.body,
         );
         await expect(articleComment.body).toHaveText(newCommentData.body);
-        await articleComment.link.click();
+        // await articleComment.lnk.click();
+        const commentPage = await articlePage.clickCommentLink(
+          articleComment.link,
+        );
 
         // Assert
         await expect(commentPage.commentBody).toHaveText(newCommentData.body);
+
+        return commentPage;
       });
 
       let editCommentData: AddCommentModel;
@@ -105,7 +104,7 @@ test.describe('Create, verify and delete comment', () => {
         // Arrange
         const secondCommentData = prepareRandomComment();
         // Act
-        await articlePage.addCommentButton.click();
+        const addCommentView = await articlePage.clickCommentButton();
         await addCommentView.createComment(secondCommentData);
         // Assert
         const articleComment = articlePage.getArticleComment(
@@ -129,7 +128,7 @@ test.describe('Create, verify and delete comment', () => {
         const newCommentData = prepareRandomComment();
 
         // ACT
-        await articlePage.addCommentButton.click();
+        const addCommentView = await articlePage.clickCommentButton();
         await addCommentView.createComment(newCommentData);
 
         // Assert
@@ -142,7 +141,7 @@ test.describe('Create, verify and delete comment', () => {
         const secondCommentBody =
           await test.step('create second comment', async () => {
             const secondCommentData = prepareRandomComment();
-            await articlePage.addCommentButton.click();
+            const addCommentView = await articlePage.clickCommentButton();
             await addCommentView.createComment(secondCommentData);
             return secondCommentData.body;
           });
@@ -150,7 +149,9 @@ test.describe('Create, verify and delete comment', () => {
           const articleComment =
             articlePage.getArticleComment(secondCommentBody);
           await expect(articleComment.body).toHaveText(secondCommentBody);
-          await articleComment.link.click();
+          const commentPage = await articlePage.clickCommentLink(
+            articleComment.link,
+          );
           await expect(commentPage.commentBody).toHaveText(secondCommentBody);
         });
       });

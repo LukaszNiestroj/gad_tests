@@ -1,5 +1,8 @@
 import { MainMenuComponent } from '@_src/components/main-menu.component';
+import { ArticlesPage } from '@_src/pages/articles.page';
 import { BasePage } from '@_src/pages/base.page';
+import { CommentPage } from '@_src/pages/comment.page';
+import { AddCommentView } from '@_src/views/addComment.view';
 import { Locator, Page } from '@playwright/test';
 
 interface ArticleComment {
@@ -24,11 +27,18 @@ export class ArticlePage extends BasePage {
     this.alertPopup = this.page.getByTestId('alert-popup');
   }
 
-  async deleteArticle(): Promise<void> {
+  async clickCommentButton(): Promise<AddCommentView> {
+    await this.addCommentButton.click();
+    return new AddCommentView(this.page);
+  }
+
+  async deleteArticle(): Promise<ArticlesPage> {
     this.page.on('dialog', async (dialog) => {
       await dialog.accept();
     });
     this.deleteIcon.click();
+
+    return new ArticlesPage(this.page);
   }
 
   getArticleComment(body: string): ArticleComment {
@@ -40,5 +50,10 @@ export class ArticlePage extends BasePage {
       link: commentContainer.locator("[id^='gotoComment']"),
       body: commentContainer.locator(':text("comment:") + span'),
     };
+  }
+
+  async clickCommentLink(commentLink: Locator): Promise<CommentPage> {
+    await commentLink.click();
+    return new CommentPage(this.page);
   }
 }
