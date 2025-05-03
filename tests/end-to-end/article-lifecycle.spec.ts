@@ -1,30 +1,19 @@
 import { prepareRandomArticle } from '@_src/factories/article.factory';
+import { expect, test } from '@_src/fixtures/merge.fixture';
 import { AddArticleModel } from '@_src/models/article.model';
-import { ArticlesPage } from '@_src/pages/articles.page';
-import { expect, test } from '@playwright/test';
 
 test.describe.configure({ mode: 'serial' });
 test.describe('Create, verify and delete articles', () => {
-  let articlesPage: ArticlesPage;
   let articleData: AddArticleModel;
 
-  test.beforeEach(async ({ page }) => {
-    articlesPage = new ArticlesPage(page);
-
-    await articlesPage.goto();
-  });
   test(
     'create article with mandatory fields',
     { tag: ['@GAD-R04-01', '@logged'] },
-    async () => {
+    async ({ addArticlesView }) => {
       // Arrange
       articleData = prepareRandomArticle();
 
-      // ACT
-      const addArticlesView =
-        await articlesPage.mainMenu.clickAddArticleButtonLogged();
-      await expect.soft(addArticlesView.addNewHeader).toBeVisible();
-      // await addArticlesView.createArticle(articleData);
+      // Act
       const articlePage = await addArticlesView.createArticle(articleData);
 
       // Assert
@@ -39,7 +28,7 @@ test.describe('Create, verify and delete articles', () => {
   test(
     'user can access single article',
     { tag: ['@GAD-R04-03', '@logged'] },
-    async () => {
+    async ({ articlesPage }) => {
       // ACT
       const articlePage = await articlesPage.gotoArticle(articleData.title);
 
@@ -55,7 +44,7 @@ test.describe('Create, verify and delete articles', () => {
   test(
     'user can delete own article',
     { tag: ['@GAD-R04-04', '@logged'] },
-    async () => {
+    async ({ articlesPage }) => {
       // Arrange
       const articlePage = await articlesPage.gotoArticle(articleData.title);
       const expectedArticlesTitle = 'Articles';
