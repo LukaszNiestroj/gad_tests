@@ -1,19 +1,16 @@
+import { expect, test } from '@_src/fixtures/merge.fixture';
 import { LoginUserModel } from '@_src/models/user.model';
-import { LoginPage } from '@_src/pages/login.page';
 import { testUser1 } from '@_src/test-data/user-data';
-import { expect, test } from '@playwright/test';
 
 test.describe('Verify user login', () => {
   test(
     'login with correct credentials',
     { tag: ['@GAD-R02-01', '@login'] },
-    async ({ page }) => {
+    async ({ loginPage }) => {
       // Arrange
-      const loginPage = new LoginPage(page);
       const expectedWelcomeTitle = 'Welcome';
 
       // ACT
-      await loginPage.goto();
       const welcomePage = await loginPage.login(testUser1);
       const title = await welcomePage.getTitle();
 
@@ -25,9 +22,8 @@ test.describe('Verify user login', () => {
   test(
     'reject login with incorrect password',
     { tag: ['@GAD-R02-01', '@login'] },
-    async ({ page }) => {
+    async ({ loginPage }) => {
       // Arrange
-      const loginPage = new LoginPage(page);
       const expectedLoginErrorMessage = 'Invalid username or password';
       const expectedLoginTitle = 'Login';
 
@@ -37,7 +33,6 @@ test.describe('Verify user login', () => {
       };
 
       // ACT
-      await loginPage.goto();
       await loginPage.login(loginUserData);
       const title = await loginPage.getTitle();
 

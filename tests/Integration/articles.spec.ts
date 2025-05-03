@@ -1,23 +1,11 @@
 import { prepareRandomArticle } from '@_src/factories/article.factory';
-import { ArticlesPage } from '@_src/pages/articles.page';
-import { AddArticlesView } from '@_src/views/addArticle.view';
-import { expect, test } from '@playwright/test';
+import { expect, test } from '@_src/fixtures/merge.fixture';
 
 test.describe('Verify articles', () => {
-  let articlesPage: ArticlesPage;
-  let addArticlesView: AddArticlesView;
-
-  test.beforeEach(async ({ page }) => {
-    articlesPage = new ArticlesPage(page);
-    await articlesPage.goto();
-    addArticlesView = await articlesPage.mainMenu.clickAddArticleButtonLogged();
-    await expect.soft(addArticlesView.addNewHeader).toBeVisible();
-  });
-
   test(
     'creating article with missing title text',
     { tag: ['@GAD-R04-01', '@logged'] },
-    async () => {
+    async ({ addArticlesView }) => {
       // Arrange
       const articleErrorMessage = 'Article was not created';
       const articleData = prepareRandomArticle();
@@ -36,7 +24,7 @@ test.describe('Verify articles', () => {
   test(
     'creating article with missing body text',
     { tag: ['@GAD-R04-01', '@logged'] },
-    async () => {
+    async ({ addArticlesView }) => {
       // Arrange
       const articleErrorMessage = 'Article was not created';
       const articleData = prepareRandomArticle();
@@ -56,7 +44,7 @@ test.describe('Verify articles', () => {
     test(
       'creating article with title exceeding 128 signs',
       { tag: ['@GAD-R04-02', '@logged'] },
-      async () => {
+      async ({ addArticlesView }) => {
         // Arrange
         const articleErrorMessage = 'Article was not created';
         const articleData = prepareRandomArticle(129);
@@ -74,7 +62,7 @@ test.describe('Verify articles', () => {
     test(
       'creating article with title 128 signs',
       { tag: ['@GAD-R04-02', '@logged'] },
-      async () => {
+      async ({ addArticlesView }) => {
         // Arrange
         const articleData = prepareRandomArticle(128);
 
