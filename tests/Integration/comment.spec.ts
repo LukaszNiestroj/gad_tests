@@ -22,7 +22,13 @@ test(
         .soft(addCommentView.addNewHeader)
         .toHaveText(expectedAddCommentHeader);
 
-      const responsePromise = waitForResponse(page, '/api/comments', 'GET');
+      const waitParams = {
+        page,
+        url: '/api/comments',
+        method: 'GET',
+        text: newCommentData.body,
+      };
+      const responsePromise = waitForResponse(waitParams);
 
       articlePage = await addCommentView.createComment(newCommentData);
       const response = await responsePromise;

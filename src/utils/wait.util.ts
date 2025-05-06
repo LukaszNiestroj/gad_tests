@@ -1,18 +1,25 @@
 import { RESPONSE_TIMEOUT } from '@_pw-config';
 import { Page, Response } from '@playwright/test';
 
+interface WaitParams {
+  page: Page;
+  url: string;
+  method?: string;
+  status?: number;
+  text?: string;
+}
+
 export async function waitForResponse(
-  page: Page,
-  url: string,
-  method?: string,
-  status?: number,
+  waitParams: WaitParams,
 ): Promise<Response> {
-  return page.waitForResponse(
-    (response) => {
+  return waitParams.page.waitForResponse(
+    async (response) => {
       return (
-        response.url().includes(url) &&
-        (!method || response.request().method() == method) &&
-        (!status || response.status() == status)
+        response.url().includes(waitParams.url) &&
+        (!waitParams.method ||
+          response.request().method() === waitParams.method) &&
+        (!waitParams.status || response.status() === waitParams.status) &&
+        (!waitParams.text || (await response.text()).includes(waitParams.text))
       );
     },
     {

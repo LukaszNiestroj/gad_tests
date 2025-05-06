@@ -13,7 +13,7 @@ test.describe('Verify articles', () => {
       const articleData = prepareRandomArticle();
       articleData.title = '';
 
-      const responsePromise = waitForResponse(page, '/api/articles');
+      const responsePromise = waitForResponse({ page, url: '/api/articles' });
 
       // ACT
       await addArticlesView.createArticle(articleData);
@@ -37,7 +37,7 @@ test.describe('Verify articles', () => {
       const articleData = prepareRandomArticle();
       articleData.body = '';
 
-      const responsePromise = waitForResponse(page, '/api/articles');
+      const responsePromise = waitForResponse({ page, url: '/api/articles' });
 
       // ACT
       await addArticlesView.createArticle(articleData);
@@ -61,7 +61,8 @@ test.describe('Verify articles', () => {
         const articleData = prepareRandomArticle(129);
         const expectedResponseCode = 422;
 
-        const responsePromise = waitForResponse(page, '/api/articles');
+        // ACT
+        const responsePromise = waitForResponse({ page, url: '/api/articles' });
 
         // ACT
         await addArticlesView.createArticle(articleData);
@@ -83,7 +84,7 @@ test.describe('Verify articles', () => {
         const articleData = prepareRandomArticle(128);
         const expectedResponseCode = 201;
 
-        const responsePromise = waitForResponse(page, '/api/articles');
+        const responsePromise = waitForResponse({ page, url: '/api/articles' });
 
         // ACT
         const articlePage = await addArticlesView.createArticle(articleData);
@@ -104,7 +105,12 @@ test.describe('Verify articles', () => {
         // Arrange
         const articleData = prepareRandomArticle();
 
-        const responsePromise = waitForResponse(page, '/api/articles', 'GET');
+        const waitParams = {
+          page,
+          url: '/api/articles',
+          method: 'GET',
+        };
+        const responsePromise = waitForResponse(waitParams);
         // ACT
         const articlePage = await addArticlesView.createArticle(articleData);
         const response = await responsePromise;
