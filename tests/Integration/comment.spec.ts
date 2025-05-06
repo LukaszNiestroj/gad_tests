@@ -1,0 +1,37 @@
+import { prepareRandomComment } from '@_src/factories/comment.factory';
+import { expect, test } from '@_src/fixtures/merge.fixture';
+import { waitForResponse } from '@_src/utils/wait.util';
+
+test(
+  'Operate on comment and api verification',
+  { tag: ['@GAD-R05-01', '@GAD-R05-02', '@GAD-R07-04', '@logged'] },
+  async ({ createRandomArticle, page }) => {
+    // Arrange
+    const newCommentData = prepareRandomComment();
+    let articlePage = createRandomArticle.articlePage;
+
+    // ACT
+    await test.step('Create new comment', async () => {
+      // Arrange
+      const expectedAddCommentHeader = 'Add New Comment';
+      const expectedCommentCreatedPopup = 'Comment was created';
+
+      // ACT
+      const addCommentView = await articlePage.clickAddCommentButton();
+      await expect
+        .soft(addCommentView.addNewHeader)
+        .toHaveText(expectedAddCommentHeader);
+
+      const responsePromise = waitForResponse(page, '/api/comments', 'GET');
+
+      articlePage = await addCommentView.createComment(newCommentData);
+      const response = await responsePromise;
+
+      // Assert
+      await expect
+        .soft(articlePage.alertPopup)
+        .toHaveText(expectedCommentCreatedPopup);
+      expect(response.ok()).toBeTruthy();
+    });
+  },
+);

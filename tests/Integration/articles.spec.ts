@@ -1,4 +1,3 @@
-import { RESPONSE_TIMEOUT } from '@_pw-config';
 import { prepareRandomArticle } from '@_src/factories/article.factory';
 import { expect, test } from '@_src/fixtures/merge.fixture';
 import { waitForResponse } from '@_src/utils/wait.util';
@@ -105,16 +104,7 @@ test.describe('Verify articles', () => {
         // Arrange
         const articleData = prepareRandomArticle();
 
-        const responsePromise = page.waitForResponse(
-          (response) => {
-            return (
-              response.url().includes('/api/articles') &&
-              response.request().method() === 'GET'
-            );
-          },
-          { timeout: RESPONSE_TIMEOUT },
-        );
-
+        const responsePromise = waitForResponse(page, '/api/articles', 'GET');
         // ACT
         const articlePage = await addArticlesView.createArticle(articleData);
         const response = await responsePromise;
