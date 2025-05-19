@@ -54,7 +54,12 @@ test.describe('Verify comments API endpoint', () => {
 
       // Assert
       expectedRequiredProperties.forEach((key) => {
-        expect.soft(comment).toHaveProperty(key);
+        expect
+          .soft(
+            comment,
+            `response comment object contains required field: ${key}`,
+          )
+          .toHaveProperty(key);
       });
     },
   );
