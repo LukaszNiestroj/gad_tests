@@ -33,4 +33,30 @@ test.describe('Verify articles API endpoint', () => {
       );
     },
   );
+
+  test(
+    'GET articles return article objects',
+    { tag: ['@GAD-R08-01', '@predefine_data'] },
+    async ({ request }) => {
+      // Arrange
+      const articlesUrl = '/api/articles';
+      const expectedRequiredProperties = [
+        'id',
+        'user_id',
+        'title',
+        'body',
+        'date',
+        'image',
+      ];
+      // Act
+      const response = await request.get(articlesUrl);
+      const responseJson = await response.json();
+      const article = responseJson[0];
+
+      // Assert
+      expectedRequiredProperties.forEach((property) => {
+        expect.soft(article).toHaveProperty(property);
+      });
+    },
+  );
 });
