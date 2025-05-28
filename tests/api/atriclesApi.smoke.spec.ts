@@ -4,7 +4,7 @@ test.describe('Verify articles API endpoint', () => {
   test.describe('Verify each condition in separate test', () => {
     test(
       'GET articles returns status code 200',
-      { tag: ['@GAD-R08-01', '@smoke', '@api'] },
+      { tag: ['@GAD-R08-01', '@smoke', '@smoke'] },
       async ({ request }) => {
         // Arrange
         const expectedStatusCode = 200;

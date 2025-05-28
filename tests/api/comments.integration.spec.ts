@@ -67,7 +67,7 @@ test.describe('Verify comment CRUD operations', () => {
   );
   test(
     'should create an comment with a logged-in user',
-    { tag: ['@GAD-R09-02', '@integration', '@api'] },
+    { tag: ['@GAD-R09-02', '@integration', '@crud'] },
     async ({ request }) => {
       // Arrange
       const expectedStatusCode = 201;

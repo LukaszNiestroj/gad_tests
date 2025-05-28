@@ -29,8 +29,13 @@ export default defineConfig({
 
   projects: [
     {
+      name: 'api',
+      testDir: 'tests/api',
+    },
+    {
       name: 'chromium-non-logged',
       grepInvert: /@logged/,
+      testDir: 'tests/ui',
       use: { ...devices['Desktop Chrome'] },
     },
     {

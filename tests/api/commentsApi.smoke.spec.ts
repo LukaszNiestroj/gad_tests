@@ -3,7 +3,7 @@ import { expect, test } from '@_src/fixtures/merge.fixture';
 test.describe('Verify comments API endpoint', () => {
   test(
     'GET comments returns status code 200',
-    { tag: ['@GAD-R08-02', '@smoke', '@api'] },
+    { tag: ['@GAD-R08-02', '@smoke', '@smoke'] },
     async ({ request }) => {
       // Arrange
       const expectedStatusCode = 200;

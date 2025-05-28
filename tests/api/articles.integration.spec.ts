@@ -29,7 +29,7 @@ test.describe('Verify articles CRUD operations', () => {
   );
   test(
     'should create an article with a logged-in user',
-    { tag: ['@GAD-R09-01', '@integration', '@api'] },
+    { tag: ['@GAD-R09-01', '@integration', '@crud'] },
     async ({ request }) => {
       // Arrange
       const expectedStatusCode = 201;
