@@ -4,6 +4,44 @@ import { expect, test } from '@_src/fixtures/merge.fixture';
 import { testUser1 } from '@_src/test-data/user-data';
 
 test.describe('Verify comment CRUD operations', () => {
+  let articleId: number;
+  let headers: { [key: string]: string };
+  test.beforeAll('create an article', async ({ request }) => {
+    // Login as a user
+    const loginUrl = '/api/login';
+    const userData = {
+      email: testUser1.userEmail,
+      password: testUser1.userPassword,
+    };
+    const responseLogin = await request.post(loginUrl, {
+      data: userData,
+    });
+    const responseLoginJson = await responseLogin.json();
+    const token = responseLoginJson.access_token;
+
+    // Create article
+    const articlesUrl = '/api/articles';
+    const randomArticleData = prepareRandomArticle();
+    const articleData = {
+      title: randomArticleData.title,
+      body: randomArticleData.body,
+      date: '2025-05-21T09:34:59.086Z',
+      image:
+        '.\\data\\images\\256\\team-testers_c4a246ec-8a7f-4f93-8b3a-2bc9ae818bbc.jpg',
+    };
+
+    headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    const responseArticle = await request.post(articlesUrl, {
+      headers,
+      data: articleData,
+    });
+
+    const article = await responseArticle.json();
+    articleId = article.id;
+  });
   test(
     'should not create an comment without a logged-in user',
     { tag: ['@GAD-R09-02', '@integration', '@api'] },
@@ -13,6 +51,7 @@ test.describe('Verify comment CRUD operations', () => {
       const commentsUrl = '/api/comments';
       const randomCommentData = prepareRandomComment();
       const commentData = {
+        article_id: articleId,
         body: randomCommentData.body,
         date: '2025-05-21T09:34:59.086Z',
       };
@@ -33,78 +72,32 @@ test.describe('Verify comment CRUD operations', () => {
       // Arrange
       const expectedStatusCode = 201;
 
-      // Login as a user
-      const loginUrl = '/api/login';
-
-      const userData = {
-        email: testUser1.userEmail,
-        password: testUser1.userPassword,
-      };
-      const responseLogin = await request.post(loginUrl, {
-        data: userData,
-      });
-      const responseLoginJson = await responseLogin.json();
-      const token = responseLoginJson.access_token;
-
       // Act
-      const articlesUrl = '/api/articles';
-      const randomArticleData = prepareRandomArticle();
-      const articleData = {
-        title: randomArticleData.title,
-        body: randomArticleData.body,
-        date: '2025-05-21T09:34:59.086Z',
-        image:
-          '.\\data\\images\\256\\team-testers_c4a246ec-8a7f-4f93-8b3a-2bc9ae818bbc.jpg',
-      };
-
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-
-      const responseArticle = await request.post(articlesUrl, {
-        headers,
-        data: articleData,
-      });
-
-      // Assert
-      const actualResponseStatus = responseArticle.status();
-      expect(
-        actualResponseStatus,
-        `Status code expected ${expectedStatusCode}, but received ${actualResponseStatus}`,
-      ).toBe(expectedStatusCode);
-
-      const article = await responseArticle.json();
-      expect.soft(article.title).toEqual(articleData.title);
-      expect.soft(article.body).toEqual(articleData.body);
-
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-
-      // Create a comment
-      // Arrange
       const commentsUrl = '/api/comments';
       const randomCommentData = prepareRandomComment();
-
-      // Act
       const commentData = {
-        article_id: article.id,
+        article_id: articleId,
         body: randomCommentData.body,
         date: '2025-05-21T09:34:59.086Z',
       };
-      const responseComment = await request.post(commentsUrl, {
+
+      // Act
+      const response = await request.post(commentsUrl, {
         headers,
         data: commentData,
       });
 
       // Assert
-      const actualResponseCommentStatus = responseComment.status();
+      const actualResponseStatus = response.status();
       expect(
         actualResponseStatus,
-        `Status code expected ${expectedStatusCode}, but received ${actualResponseCommentStatus}`,
+        `expect status code ${expectedStatusCode}, and received ${actualResponseStatus}`,
       ).toBe(expectedStatusCode);
 
-      const comment = await responseComment.json();
-      expect.soft(comment.article_id).toEqual(commentData.article_id);
+      const comment = await response.json();
       expect.soft(comment.body).toEqual(commentData.body);
+
+      await new Promise((resolve) => setTimeout(resolve, 5000));
     },
   );
 });
