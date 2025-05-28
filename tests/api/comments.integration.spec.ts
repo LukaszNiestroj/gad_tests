@@ -1,5 +1,6 @@
 import { expect, test } from '@_src/fixtures/merge.fixture';
 import {
+  apiLinks,
   getAuthorizationHeader,
   prepareArticlePayload,
   prepareCommentPayload,
@@ -12,10 +13,9 @@ test.describe('Verify comment CRUD operations', () => {
     // Login as a user
     headers = await getAuthorizationHeader(request);
     // Create article
-    const articlesUrl = '/api/articles';
-    const articleData = prepareArticlePayload();
 
-    const responseArticle = await request.post(articlesUrl, {
+    const articleData = prepareArticlePayload();
+    const responseArticle = await request.post(apiLinks.articlesUrl, {
       headers,
       data: articleData,
     });
@@ -29,11 +29,10 @@ test.describe('Verify comment CRUD operations', () => {
     async ({ request }) => {
       // Arrange
       const expectedStatusCode = 401;
-      const commentsUrl = '/api/comments';
       const commentData = prepareCommentPayload(articleId);
 
       // Act
-      const response = await request.post(commentsUrl, {
+      const response = await request.post(apiLinks.commentsUrl, {
         data: commentData,
       });
 
@@ -47,17 +46,13 @@ test.describe('Verify comment CRUD operations', () => {
     async ({ request }) => {
       // Arrange
       const expectedStatusCode = 201;
-
       // Act
-      const commentsUrl = '/api/comments';
       const commentData = prepareCommentPayload(articleId);
-
       // Act
-      const response = await request.post(commentsUrl, {
+      const response = await request.post(apiLinks.commentsUrl, {
         headers,
         data: commentData,
       });
-
       // Assert
       const actualResponseStatus = response.status();
       expect(
