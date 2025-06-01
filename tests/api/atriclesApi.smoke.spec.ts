@@ -20,13 +20,13 @@ test.describe('Verify articles API endpoint', () => {
       { tag: ['@GAD-R08-01', '@predefine_data'] },
       async ({ request }) => {
         // Arrange
-        const expectedMinArticleCount = 1;
+        const expectedMinArticlesCount = 1;
         // Act
         const response = await request.get(apiLinks.articlesUrl);
         const responseJson = await response.json();
         // Assert
         expect([responseJson].length).toBeGreaterThanOrEqual(
-          expectedMinArticleCount,
+          expectedMinArticlesCount,
         );
       },
     );
