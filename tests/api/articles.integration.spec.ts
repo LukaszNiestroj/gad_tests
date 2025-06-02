@@ -24,7 +24,7 @@ test.describe('Verify articles CRUD operations', () => {
       expect(response.status()).toBe(expectedStatusCode);
     },
   );
-  test.describe('CRUD operataions', { tag: ['@crud'] }, () => {
+  test.describe('CRUD operations', { tag: ['@crud'] }, () => {
     let responseArticle: APIResponse;
     let headers: Headers;
     let articleData: ArticlePayload;
@@ -39,6 +39,8 @@ test.describe('Verify articles CRUD operations', () => {
         headers,
         data: articleData,
       });
+
+      await new Promise((resolve) => setTimeout(resolve, 5000));
     });
 
     test(
