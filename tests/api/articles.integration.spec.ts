@@ -39,8 +39,19 @@ test.describe('Verify articles CRUD operations', () => {
         headers,
         data: articleData,
       });
+      // Assert article exist
+      const articleJson = await responseArticle.json();
 
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      const expectedStatusCode = 200;
+      await expect(async () => {
+        const responseArticleCreated = await request.get(
+          `${apiLinks.articlesUrl}/${articleJson.id}`,
+        );
+        expect(
+          responseArticleCreated.status(),
+          `Expect status ${expectedStatusCode} and observed: ${responseArticleCreated.status()}`,
+        ).toBe(expectedStatusCode);
+      }).toPass({ timeout: 2_000 });
     });
 
     test(
@@ -65,7 +76,6 @@ test.describe('Verify articles CRUD operations', () => {
       'should delete an article with a logged-in user',
       { tag: ['@GAD-R09-03'] },
       async ({ request }) => {
-        // await new Promise((resolve) => setTimeout(resolve, 5000));
         // Arrange
         const expectedStatusCode = 200;
         const articleJson = await responseArticle.json();
