@@ -39,7 +39,7 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
     {
-      name: 'chromium-non-logged',
+      name: 'chromium-non-logged-practice',
       grepInvert: /@logged/,
       testDir: 'tests/practice',
       use: { ...devices['Desktop Chrome'] },
