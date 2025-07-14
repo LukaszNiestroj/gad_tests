@@ -1,7 +1,7 @@
-import { ArticlesPage } from '@_src/pages/articles.page';
-import { CommentsPage } from '@_src/pages/comments.page';
-import { HomePage } from '@_src/pages/home.page';
-import { AddArticlesView } from '@_src/views/addArticle.view';
+import { ArticlesPage } from '@_src/ui/pages/articles.page';
+import { CommentsPage } from '@_src/ui/pages/comments.page';
+import { HomePage } from '@_src/ui/pages/home.page';
+import { AddArticlesView } from '@_src/ui/views/addArticle.view';
 import { Locator, Page } from '@playwright/test';
 
 export class MainMenuComponent {

@@ -1,7 +1,7 @@
-import { MainMenuComponent } from '@_src/components/main-menu.component';
-import { ArticlePage } from '@_src/pages/article.page';
-import { BasePage } from '@_src/pages/base.page';
-import { EditCommentView } from '@_src/views/editComment.view';
+import { MainMenuComponent } from '@_src/ui/components/main-menu.component';
+import { ArticlePage } from '@_src/ui/pages/article.page';
+import { BasePage } from '@_src/ui/pages/base.page';
+import { EditCommentView } from '@_src/ui/views/editComment.view';
 import { Locator, Page } from '@playwright/test';
 
 export class CommentPage extends BasePage {
