@@ -1,4 +1,4 @@
-import { apiLinks } from '@_src/api/utils/api.util';
+import { apiUrls } from '@_src/api/utils/api.util';
 import { expect, test } from '@_src/ui/fixtures/merge.fixture';
 
 test.describe('Verify comments API endpoint', () => {
@@ -9,7 +9,7 @@ test.describe('Verify comments API endpoint', () => {
       // Arrange
       const expectedStatusCode = 200;
       // Act
-      const response = await request.get(apiLinks.commentsUrl);
+      const response = await request.get(apiUrls.commentsUrl);
       // Assert
       expect(response.status()).toBe(expectedStatusCode);
     },
@@ -21,7 +21,7 @@ test.describe('Verify comments API endpoint', () => {
       // Arrange
       const expectedMinCommentsCount = 1;
       // Act
-      const response = await request.get(apiLinks.commentsUrl);
+      const response = await request.get(apiUrls.commentsUrl);
       const responseJson = await response.json();
       // Assert
       expect([responseJson].length).toBeGreaterThanOrEqual(
@@ -43,7 +43,7 @@ test.describe('Verify comments API endpoint', () => {
         'date',
       ];
       // Act
-      const response = await request.get(apiLinks.commentsUrl);
+      const response = await request.get(apiUrls.commentsUrl);
       const responseJson = await response.json();
       const comment = responseJson[0];
       // Assert
