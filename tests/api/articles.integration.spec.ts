@@ -1,3 +1,4 @@
+import { expectGetResponseStatus } from '@_src/api/assertions/assertions.api';
 import { createArticleWithApi } from '@_src/api/factories/article-create.api.factory';
 import { prepareArticlePayload } from '@_src/api/factories/article-payload.api.factory';
 import { getAuthorizationHeader } from '@_src/api/factories/authorization-header.api.factory';
@@ -82,14 +83,12 @@ test.describe('Verify articles CRUD operations', () => {
         ).toBe(expectedStatusCode);
 
         // Assert check if the article is deleted
-        const responseArticleGet = await request.get(
-          `${apiUrls.articlesUrl}/${articleId}`,
-        );
         const expectedDeleteArticleStatusCode = 404;
-        expect(
-          responseArticleGet.status(),
-          `expect status code ${expectedDeleteArticleStatusCode}, and received ${responseArticleGet.status()}`,
-        ).toBe(expectedDeleteArticleStatusCode);
+        await expectGetResponseStatus(
+          request,
+          `${apiUrls.articlesUrl}/${articleId}`,
+          expectedDeleteArticleStatusCode,
+        );
       },
     );
 
@@ -113,14 +112,12 @@ test.describe('Verify articles CRUD operations', () => {
         ).toBe(expectedStatusCode);
 
         // Assert check if the article is not deleted
-        const responseArticleGet = await request.get(
-          `${apiUrls.articlesUrl}/${articleId}`,
-        );
         const expectedNotDeleteArticleStatusCode = 200;
-        expect(
-          responseArticleGet.status(),
-          `expect status code ${expectedNotDeleteArticleStatusCode}, and received ${responseArticleGet.status()}`,
-        ).toBe(expectedNotDeleteArticleStatusCode);
+        await expectGetResponseStatus(
+          request,
+          `${apiUrls.articlesUrl}/${articleId}`,
+          expectedNotDeleteArticleStatusCode,
+        );
       },
     );
   });
