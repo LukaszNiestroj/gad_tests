@@ -1,4 +1,4 @@
-import { prepareArticlePayload } from '@_src/api/factories/article-payload.api.factory';
+import { createArticleWithApi } from '@_src/api/factories/article-create.api.factory';
 import { getAuthorizationHeader } from '@_src/api/factories/authorization-header.api.factory';
 import { prepareCommentPayload } from '@_src/api/factories/comment-payload.api.factory';
 import { CommentPayload } from '@_src/api/models/comment.api.model';
@@ -14,26 +14,10 @@ test.describe('Verify comment CRUD operations', () => {
     // Login as a user
     headers = await getAuthorizationHeader(request);
     // Create article
-
-    const articleData = prepareArticlePayload();
-    const responseArticle = await request.post(apiUrls.articlesUrl, {
-      headers,
-      data: articleData,
-    });
+    const responseArticle = await createArticleWithApi(request, headers);
 
     const article = await responseArticle.json();
     articleId = article.id;
-
-    const expectedStatusCode = 200;
-    await expect(async () => {
-      const responseArticleCreated = await request.get(
-        `${apiUrls.articlesUrl}/${articleId}`,
-      );
-      expect(
-        responseArticleCreated.status(),
-        `Expect status ${expectedStatusCode} and observed: ${responseArticleCreated.status()}`,
-      ).toBe(expectedStatusCode);
-    }).toPass({ timeout: 2_000 });
   });
   test(
     'should not create an comment without a logged-in user',
