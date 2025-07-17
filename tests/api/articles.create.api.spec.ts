@@ -57,6 +57,34 @@ test.describe(
           expect.soft(articleJson.body).toEqual(articleData.body);
         },
       );
+      test(
+        'should create new article when modified article id not exist with a logged-in user',
+        { tag: ['@GAD-R10-01'] },
+        async ({ request }) => {
+          // Arrange
+          const expectedStatusCode = 201;
+          const articleData = prepareArticlePayload();
+          // Act
+          const responseArticlePut = await request.put(
+            `${apiUrls.articlesUrl}/${new Date().valueOf()}`,
+            {
+              headers,
+              data: articleData,
+            },
+          );
+          // Assert
+          const actualResponseStatus = responseArticlePut.status();
+          expect(
+            actualResponseStatus,
+            `expect status code ${expectedStatusCode}, and received ${actualResponseStatus}`,
+          ).toBe(expectedStatusCode);
+
+          const articleJson = await responseArticlePut.json();
+
+          expect.soft(articleJson.title).toEqual(articleData.title);
+          expect.soft(articleJson.body).toEqual(articleData.body);
+        },
+      );
     });
   },
 );
