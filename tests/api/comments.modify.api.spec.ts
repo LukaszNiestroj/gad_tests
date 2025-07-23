@@ -2,6 +2,7 @@ import { createArticleWithApi } from '@_src/api/factories/article-create.api.fac
 import { getAuthorizationHeader } from '@_src/api/factories/authorization-header.api.factory';
 import { createCommentWithApi } from '@_src/api/factories/comment-create.api.factory';
 import { prepareCommentPayload } from '@_src/api/factories/comment-payload.api.factory';
+import { CommentPayload } from '@_src/api/models/comment.api.model';
 import { Headers } from '@_src/api/models/headers.api.model';
 import { apiUrls } from '@_src/api/utils/api.util';
 import { expect, test } from '@_src/ui/fixtures/merge.fixture';
@@ -14,6 +15,7 @@ test.describe(
     let articleId: number;
     let headers: Headers;
     let responseComment: APIResponse;
+    let commentData: CommentPayload;
     test.beforeAll('create an article', async ({ request }) => {
       // Login as a user
       headers = await getAuthorizationHeader(request);
@@ -25,7 +27,13 @@ test.describe(
     });
 
     test.beforeEach('create a comment', async ({ request }) => {
-      responseComment = await createCommentWithApi(request, headers, articleId);
+      commentData = prepareCommentPayload(articleId);
+      responseComment = await createCommentWithApi(
+        request,
+        headers,
+        articleId,
+        commentData,
+      );
     });
 
     test(
@@ -60,7 +68,7 @@ test.describe(
         expect
           .soft(modifiedCommentGetJson.body)
           .toEqual(modifiedCommentData.body);
-        expect.soft(modifiedCommentGetJson.body).not.toEqual(comment.body);
+        expect.soft(modifiedCommentGetJson.body).not.toEqual(commentData.body);
       },
     );
 
@@ -93,7 +101,7 @@ test.describe(
           `${apiUrls.commentsUrl}/${comment.id}`,
         );
         const modifiedCommentGetJson = await modifiedCommentGet.json();
-        expect.soft(modifiedCommentGetJson.body).toEqual(comment.body);
+        expect.soft(modifiedCommentGetJson.body).toEqual(commentData.body);
         expect
           .soft(modifiedCommentGetJson.body)
           .not.toEqual(modifiedCommentData.body);

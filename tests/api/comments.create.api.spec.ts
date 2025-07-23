@@ -66,5 +66,39 @@ test.describe(
         expect.soft(comment.body).toEqual(commentData.body);
       },
     );
+
+    test('should create a comment when modification on nonexisting id requested with logged-in user @GAD-R10-02', async ({
+      request,
+    }) => {
+      // Arrange
+      const expectedStatusCode = 201;
+      const commentData = prepareCommentPayload(articleId);
+
+      // Act
+      const responseCommentPut = await request.put(
+        `${apiUrls.commentsUrl}/${new Date().valueOf()}`,
+        {
+          headers,
+          data: commentData,
+        },
+      );
+
+      // Assert
+      const actualResponseStatus = responseCommentPut.status();
+      expect(
+        actualResponseStatus,
+        `expect status code ${expectedStatusCode}, and received ${actualResponseStatus}`,
+      ).toBe(expectedStatusCode);
+
+      // Assert modified comment
+      const responseCommentPutJson = await responseCommentPut.json();
+      const commentGet = await request.get(
+        `${apiUrls.commentsUrl}/${responseCommentPutJson.id}`,
+      );
+
+      const commentGetJson = await commentGet.json();
+
+      expect.soft(commentGetJson.body).toEqual(commentData.body);
+    });
   },
 );
