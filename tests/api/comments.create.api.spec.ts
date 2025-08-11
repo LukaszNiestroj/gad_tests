@@ -52,7 +52,6 @@ test.describe(
         const responseComment = await createCommentWithApi(
           request,
           headers,
-          articleId,
           commentData,
         );
         // Assert
