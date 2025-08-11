@@ -4,7 +4,7 @@ import { getAuthorizationHeader } from '@_src/api/factories/authorization-header
 import { prepareAndCreateCommentWithApi } from '@_src/api/factories/comment-create.api.factory';
 import { Headers } from '@_src/api/models/headers.api.model';
 import { apiUrls } from '@_src/api/utils/api.util';
-import { expect, test } from '@_src/ui/fixtures/merge.fixture';
+import { expect, test } from '@_src/merge.fixture';
 import { APIResponse } from '@playwright/test';
 
 test.describe(

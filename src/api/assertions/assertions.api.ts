@@ -1,5 +1,5 @@
 import { Headers } from '@_src/api/models/headers.api.model';
-import { expect } from '@_src/ui/fixtures/merge.fixture';
+import { expect } from '@_src/merge.fixture';
 import { APIRequestContext } from '@playwright/test';
 
 export async function expectGetResponseStatus(

@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { expect, test } from '@_src/ui/fixtures/merge.fixture';
+import { expect, test } from '@_src/merge.fixture';
 
 test.describe('Verify locator list', () => {
   test.beforeEach(async ({ page }) => {
