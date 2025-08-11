@@ -1,4 +1,3 @@
-import { apiUrls } from '@_src/api/utils/api.util';
 import { expect, test } from '@_src/merge.fixture';
 
 test.describe('Verify articles API endpoint', () => {
@@ -6,11 +5,11 @@ test.describe('Verify articles API endpoint', () => {
     test(
       'GET articles returns status code 200',
       { tag: ['@GAD-R08-01', '@smoke', '@smoke'] },
-      async ({ request }) => {
+      async ({ articlesRequest }) => {
         // Arrange
         const expectedStatusCode = 200;
         // Act
-        const response = await request.get(apiUrls.articlesUrl);
+        const response = await articlesRequest.get();
         // Assert
         expect(response.status()).toBe(expectedStatusCode);
       },
@@ -18,11 +17,11 @@ test.describe('Verify articles API endpoint', () => {
     test(
       'GET articles should return at least 1 article',
       { tag: ['@GAD-R08-01', '@predefine_data'] },
-      async ({ request }) => {
+      async ({ articlesRequest }) => {
         // Arrange
         const expectedMinArticlesCount = 1;
         // Act
-        const response = await request.get(apiUrls.articlesUrl);
+        const response = await articlesRequest.get();
         const responseJson = await response.json();
         // Assert
         expect([responseJson].length).toBeGreaterThanOrEqual(
@@ -33,7 +32,7 @@ test.describe('Verify articles API endpoint', () => {
     test(
       'GET articles return article objects',
       { tag: ['@GAD-R08-01', '@predefine_data'] },
-      async ({ request }) => {
+      async ({ articlesRequest }) => {
         // Arrange
         const expectedRequiredProperties = [
           'id',
@@ -44,7 +43,7 @@ test.describe('Verify articles API endpoint', () => {
           'image',
         ];
         // Act
-        const response = await request.get(apiUrls.articlesUrl);
+        const response = await articlesRequest.get();
         const responseJson = await response.json();
         const article = responseJson[0];
         // Assert
@@ -57,8 +56,8 @@ test.describe('Verify articles API endpoint', () => {
   test(
     'GET articles should return an object with required properties',
     { tag: ['@predefine_data'] },
-    async ({ request }) => {
-      const response = await request.get(apiUrls.articlesUrl);
+    async ({ articlesRequest }) => {
+      const response = await articlesRequest.get();
       await test.step('GET articles returns status code 200', async () => {
         const expectedStatusCode = 200;
 
