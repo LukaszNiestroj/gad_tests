@@ -11,11 +11,7 @@ export class ArticlesRequest {
     return await this.request.get(this.url);
   }
 
-  //   async getTitle(): Promise<string> {
-  //     return await this.page.title();
-  //   }
-
-  //   async waitForPageLoadUrl(): Promise<void> {
-  //     await this.page.waitForURL(this.url);
-  //   }
+  async getOne(articleId: string): Promise<APIResponse> {
+    return await this.request.get(`${this.url}/${articleId}`);
+  }
 }
