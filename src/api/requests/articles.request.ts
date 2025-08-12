@@ -43,4 +43,10 @@ export class ArticlesRequest {
       data,
     });
   }
+
+  async delete(articleId: string): Promise<APIResponse> {
+    return await this.request.delete(`${this.url}/${articleId}`, {
+      headers: this.headers,
+    });
+  }
 }
