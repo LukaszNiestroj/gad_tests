@@ -13,11 +13,15 @@ export class ArticlesRequest {
   }
 
   async get(): Promise<APIResponse> {
-    return await this.request.get(this.url);
+    return await this.request.get(this.url, {
+      headers: this.headers,
+    });
   }
 
   async getOne(articleId: string): Promise<APIResponse> {
-    return await this.request.get(`${this.url}/${articleId}`);
+    return await this.request.get(`${this.url}/${articleId}`, {
+      headers: this.headers,
+    });
   }
 
   async post(data: ArticlePayload): Promise<APIResponse> {
