@@ -12,14 +12,12 @@ test.describe(
     test(
       'should not create an article without a logged-in user',
       { tag: ['@GAD-R09-01', '@integration', '@crud'] },
-      async ({ request }) => {
+      async ({ articlesRequest }) => {
         // Arrange
         const expectedStatusCode = 401;
         const articleData = prepareArticlePayload();
         // Act
-        const response = await request.post(apiUrls.articlesUrl, {
-          data: articleData,
-        });
+        const response = await articlesRequest.post(articleData);
         // Assert
         expect(response.status()).toBe(expectedStatusCode);
       },
@@ -34,15 +32,14 @@ test.describe(
       test(
         'should create an article with a logged-in user',
         { tag: ['@GAD-R09-01'] },
-        async ({ request }) => {
+        async ({ articlesRequestLogged }) => {
           // Arrange
           const expectedStatusCode = 201;
 
           // Act
           const articleData = prepareArticlePayload();
           const responseArticle = await createArticleWithApi(
-            request,
-            headers,
+            articlesRequestLogged,
             articleData,
           );
           // Assert

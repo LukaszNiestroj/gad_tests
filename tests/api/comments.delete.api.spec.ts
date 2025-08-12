@@ -14,15 +14,20 @@ test.describe(
     let articleId: number;
     let headers: Headers;
     let responseComment: APIResponse;
-    test.beforeAll('create an article', async ({ request }) => {
-      // Login as a user
-      headers = await getAuthorizationHeader(request);
-      // Create article
-      const responseArticle = await createArticleWithApi(request, headers);
+    test.beforeAll(
+      'create an article',
+      async ({ request, articlesRequestLogged }) => {
+        // Login as a user
+        headers = await getAuthorizationHeader(request);
+        // Create article
+        const responseArticle = await createArticleWithApi(
+          articlesRequestLogged,
+        );
 
-      const article = await responseArticle.json();
-      articleId = article.id;
-    });
+        const article = await responseArticle.json();
+        articleId = article.id;
+      },
+    );
 
     test.beforeEach('create a comment', async ({ request }) => {
       responseComment = await prepareAndCreateCommentWithApi(

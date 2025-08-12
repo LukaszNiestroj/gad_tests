@@ -20,11 +20,10 @@ test.describe(
       headers = await getAuthorizationHeader(request);
     });
 
-    test.beforeEach('create an article', async ({ request }) => {
+    test.beforeEach('create an article', async ({ articlesRequestLogged }) => {
       articleData = prepareArticlePayload();
       responseArticle = await createArticleWithApi(
-        request,
-        headers,
+        articlesRequestLogged,
         articleData,
       );
     });

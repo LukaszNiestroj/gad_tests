@@ -1,9 +1,14 @@
+import { ArticlePayload } from '@_src/api/models/article.api.model';
+import { Headers } from '@_src/api/models/headers.api.model';
 import { apiUrls } from '@_src/api/utils/api.util';
 import { APIRequestContext, APIResponse } from '@playwright/test';
 
 export class ArticlesRequest {
   url: string;
-  constructor(protected request: APIRequestContext) {
+  constructor(
+    protected request: APIRequestContext,
+    protected headers?: Headers,
+  ) {
     this.url = apiUrls.articlesUrl;
   }
 
@@ -13,5 +18,12 @@ export class ArticlesRequest {
 
   async getOne(articleId: string): Promise<APIResponse> {
     return await this.request.get(`${this.url}/${articleId}`);
+  }
+
+  async post(data: ArticlePayload): Promise<APIResponse> {
+    return await this.request.post(this.url, {
+      headers: this.headers,
+      data,
+    });
   }
 }

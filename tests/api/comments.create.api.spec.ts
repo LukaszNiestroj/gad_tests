@@ -13,15 +13,20 @@ test.describe(
     let articleId: number;
     let headers: Headers;
 
-    test.beforeAll('create an article', async ({ request }) => {
-      // Login as a user
-      headers = await getAuthorizationHeader(request);
-      // Create article
-      const responseArticle = await createArticleWithApi(request, headers);
+    test.beforeAll(
+      'create an article',
+      async ({ request, articlesRequestLogged }) => {
+        // Login as a user
+        headers = await getAuthorizationHeader(request);
+        // Create article
+        const responseArticle = await createArticleWithApi(
+          articlesRequestLogged,
+        );
 
-      const article = await responseArticle.json();
-      articleId = article.id;
-    });
+        const article = await responseArticle.json();
+        articleId = article.id;
+      },
+    );
     test(
       'should not create an comment without a logged-in user',
       { tag: ['@GAD-R09-02', '@integration', '@api'] },
