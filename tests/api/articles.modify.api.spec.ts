@@ -1,9 +1,6 @@
 import { createArticleWithApi } from '@_src/api/factories/article-create.api.factory';
 import { prepareArticlePayload } from '@_src/api/factories/article-payload.api.factory';
-import { getAuthorizationHeader } from '@_src/api/factories/authorization-header.api.factory';
 import { ArticlePayload } from '@_src/api/models/article.api.model';
-import { Headers } from '@_src/api/models/headers.api.model';
-import { apiUrls } from '@_src/api/utils/api.util';
 import { expect, test } from '@_src/merge.fixture';
 import { APIResponse } from '@playwright/test';
 
@@ -12,12 +9,7 @@ test.describe(
   { tag: ['@api', '@article', '@crud', '@modify'] },
   () => {
     let responseArticle: APIResponse;
-    let headers: Headers;
     let articleData: ArticlePayload;
-
-    test.beforeAll('should login as a user', async ({ request }) => {
-      headers = await getAuthorizationHeader(request);
-    });
 
     test.beforeEach('create an article', async ({ articlesRequestLogged }) => {
       articleData = prepareArticlePayload();
@@ -99,7 +91,7 @@ test.describe(
       test(
         'should partially modify an article with a logged-in user',
         { tag: ['@GAD-R10-03'] },
-        async ({ request }) => {
+        async ({ articlesRequestLogged }) => {
           // Arrange
           const expectedStatusCode = 200;
           const articleJson = await responseArticle.json();
@@ -108,12 +100,9 @@ test.describe(
             title: `Patched title ${new Date().toISOString()}`,
           };
           // Act
-          const responseArticlePatch = await request.patch(
-            `${apiUrls.articlesUrl}/${articleId}`,
-            {
-              headers,
-              data: modifiedArticleData,
-            },
+          const responseArticlePatch = await articlesRequestLogged.patch(
+            modifiedArticleData,
+            articleId,
           );
           // Assert
           const actualResponseStatus = responseArticlePatch.status();
@@ -135,7 +124,7 @@ test.describe(
       test(
         'should not partially modify an article with non a logged-in user',
         { tag: ['@GAD-R10-03'] },
-        async ({ request, articlesRequest }) => {
+        async ({ articlesRequest }) => {
           // Arrange
           const expectedStatusCode = 401;
           const articleJson = await responseArticle.json();
@@ -144,12 +133,8 @@ test.describe(
             title: `Patched title ${new Date().toISOString()}`,
           };
           // Act
-          const responseArticlePatch = await request.patch(
-            `${apiUrls.articlesUrl}/${articleId}`,
-            {
-              data: modifiedArticleData,
-            },
-          );
+          const responseArticlePatch =
+            await articlesRequest.patch(modifiedArticleData);
           // Assert
           const actualResponseStatus = responseArticlePatch.status();
           expect(
@@ -172,7 +157,7 @@ test.describe(
       test(
         'should partially modify an article with improper field a logged-in user',
         { tag: ['@GAD-R10-03'] },
-        async ({ request }) => {
+        async ({ articlesRequestLogged }) => {
           // Arrange
           const expectedStatusCode = 422;
           const nonExistingField = 'nonExistingField';
@@ -183,12 +168,10 @@ test.describe(
           const modifiedArticleData: Record<string, string> = {};
           modifiedArticleData[nonExistingField] = 'Hello';
           // Act
-          const responseArticlePatch = await request.patch(
-            `${apiUrls.articlesUrl}/${articleId}`,
-            {
-              headers,
-              data: modifiedArticleData,
-            },
+
+          const responseArticlePatch = await articlesRequestLogged.patch(
+            modifiedArticleData,
+            articleId,
           );
           // Assert
           const actualResponseStatus = responseArticlePatch.status();
