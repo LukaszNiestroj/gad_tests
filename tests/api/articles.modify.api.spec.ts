@@ -31,19 +31,16 @@ test.describe(
       test(
         'should modify and content for an article with a logged-in user',
         { tag: ['@GAD-R10-01'] },
-        async ({ request }) => {
+        async ({ articlesRequestLogged }) => {
           // Arrange
           const expectedStatusCode = 200;
           const articleJson = await responseArticle.json();
           const articleId = articleJson.id;
           const modifiedArticleData = prepareArticlePayload();
           // Act
-          const responseArticlePut = await request.put(
-            `${apiUrls.articlesUrl}/${articleId}`,
-            {
-              headers,
-              data: modifiedArticleData,
-            },
+          const responseArticlePut = await articlesRequestLogged.put(
+            modifiedArticleData,
+            articleId,
           );
           // Assert
           const actualResponseStatus = responseArticlePut.status();
@@ -66,19 +63,15 @@ test.describe(
       test(
         'should not modify an article with non a logged-in user',
         { tag: ['@GAD-R10-03'] },
-        async ({ request, articlesRequest }) => {
+        async ({ articlesRequest }) => {
           // Arrange
           const expectedStatusCode = 401;
           const articleJson = await responseArticle.json();
           const articleId = articleJson.id;
           const modifiedArticleData = prepareArticlePayload();
           // Act
-          const responseArticlePut = await request.put(
-            `${apiUrls.articlesUrl}/${articleId}`,
-            {
-              data: modifiedArticleData,
-            },
-          );
+          const responseArticlePut =
+            await articlesRequest.put(modifiedArticleData);
           // Assert
           const actualResponseStatus = responseArticlePut.status();
           expect(

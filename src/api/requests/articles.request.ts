@@ -26,4 +26,11 @@ export class ArticlesRequest {
       data,
     });
   }
+
+  async put(data: ArticlePayload, articleId?: string): Promise<APIResponse> {
+    return await this.request.put(`${this.url}/${articleId}`, {
+      headers: this.headers,
+      data,
+    });
+  }
 }
