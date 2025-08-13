@@ -1,9 +1,7 @@
 import { createArticleWithApi } from '@_src/api/factories/article-create.api.factory';
-import { getAuthorizationHeader } from '@_src/api/factories/authorization-header.api.factory';
 import { createCommentWithApi } from '@_src/api/factories/comment-create.api.factory';
 import { prepareCommentPayload } from '@_src/api/factories/comment-payload.api.factory';
 import { CommentPayload } from '@_src/api/models/comment.api.model';
-import { Headers } from '@_src/api/models/headers.api.model';
 import { apiUrls } from '@_src/api/utils/api.util';
 import { expect, test } from '@_src/merge.fixture';
 import { APIResponse } from '@playwright/test';
@@ -13,23 +11,15 @@ test.describe(
   { tag: ['@crud', '@api', '@comment', '@modify'] },
   () => {
     let articleId: number;
-    let headers: Headers;
     let responseComment: APIResponse;
     let commentData: CommentPayload;
-    test.beforeAll(
-      'create an article',
-      async ({ request, articlesRequestLogged }) => {
-        // Login as a user
-        headers = await getAuthorizationHeader(request);
-        // Create article
-        const responseArticle = await createArticleWithApi(
-          articlesRequestLogged,
-        );
+    test.beforeAll('create an article', async ({ articlesRequestLogged }) => {
+      // Create article
+      const responseArticle = await createArticleWithApi(articlesRequestLogged);
 
-        const article = await responseArticle.json();
-        articleId = article.id;
-      },
-    );
+      const article = await responseArticle.json();
+      articleId = article.id;
+    });
 
     test.beforeEach('create a comment', async ({ commentsRequestLogged }) => {
       commentData = prepareCommentPayload(articleId);
@@ -43,19 +33,16 @@ test.describe(
       test(
         'should modify a comment with a logged-in user',
         { tag: ['@GAD-R10-02'] },
-        async ({ request, commentsRequest }) => {
+        async ({ commentsRequest, commentsRequestLogged }) => {
           // Arrange
           const expectedStatusCode = 200;
           const comment = await responseComment.json();
           const modifiedCommentData = prepareCommentPayload(articleId);
 
           // Act
-          const responseCommentModified = await request.put(
-            `${apiUrls.commentsUrl}/${comment.id}`,
-            {
-              headers,
-              data: modifiedCommentData,
-            },
+          const responseCommentModified = await commentsRequestLogged.put(
+            modifiedCommentData,
+            comment.id,
           );
 
           // Assert
