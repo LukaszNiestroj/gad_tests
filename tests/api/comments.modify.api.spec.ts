@@ -72,8 +72,10 @@ test.describe(
           const modifiedCommentData = prepareCommentPayload(articleId);
 
           // Act
-          const responseCommentNotModified =
-            await commentsRequest.put(modifiedCommentData);
+          const responseCommentNotModified = await commentsRequest.put(
+            modifiedCommentData,
+            comment.id,
+          );
 
           // Assert
           const actualResponseStatus = responseCommentNotModified.status();
