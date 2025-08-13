@@ -17,11 +17,11 @@ test.describe('Verify comments API endpoint', () => {
   test(
     'GET comments should return at least 1 article',
     { tag: ['@GAD-R08-02', '@predefine_data'] },
-    async ({ request }) => {
+    async ({ commentsRequest }) => {
       // Arrange
       const expectedMinCommentsCount = 1;
       // Act
-      const response = await request.get(apiUrls.commentsUrl);
+      const response = await commentsRequest.get();
       const responseJson = await response.json();
       // Assert
       expect([responseJson].length).toBeGreaterThanOrEqual(
@@ -33,7 +33,7 @@ test.describe('Verify comments API endpoint', () => {
   test(
     'GET comments return comment objects',
     { tag: ['@GAD-R08-02', '@predefine_data'] },
-    async ({ request }) => {
+    async ({ commentsRequest }) => {
       // Arrange
       const expectedRequiredProperties = [
         'id',
@@ -43,7 +43,7 @@ test.describe('Verify comments API endpoint', () => {
         'date',
       ];
       // Act
-      const response = await request.get(apiUrls.commentsUrl);
+      const response = await commentsRequest.get();
       const responseJson = await response.json();
       const comment = responseJson[0];
       // Assert

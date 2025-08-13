@@ -31,11 +31,10 @@ test.describe(
       },
     );
 
-    test.beforeEach('create a comment', async ({ request }) => {
+    test.beforeEach('create a comment', async ({ commentsRequestLogged }) => {
       commentData = prepareCommentPayload(articleId);
       responseComment = await createCommentWithApi(
-        request,
-        headers,
+        commentsRequestLogged,
         commentData,
       );
     });
@@ -44,7 +43,7 @@ test.describe(
       test(
         'should modify a comment with a logged-in user',
         { tag: ['@GAD-R10-02'] },
-        async ({ request }) => {
+        async ({ request, commentsRequest }) => {
           // Arrange
           const expectedStatusCode = 200;
           const comment = await responseComment.json();
@@ -66,9 +65,7 @@ test.describe(
             `expect status code ${expectedStatusCode}, and received ${actualResponseStatus}`,
           ).toBe(expectedStatusCode);
           // Assert after modification comment
-          const modifiedCommentGet = await request.get(
-            `${apiUrls.commentsUrl}/${comment.id}`,
-          );
+          const modifiedCommentGet = await commentsRequest.getOne(comment.id);
           const modifiedCommentGetJson = await modifiedCommentGet.json();
           expect
             .soft(modifiedCommentGetJson.body)
@@ -82,7 +79,7 @@ test.describe(
       test(
         'should not modify a comment with a non logged-in user',
         { tag: ['@GAD-R10-02'] },
-        async ({ request }) => {
+        async ({ request, commentsRequest }) => {
           // Arrange
           const expectedStatusCode = 401;
           const comment = await responseComment.json();
@@ -104,8 +101,8 @@ test.describe(
           ).toBe(expectedStatusCode);
 
           // Assert non modified comment
-          const modifiedCommentGet = await request.get(
-            `${apiUrls.commentsUrl}/${comment.id}`,
+          const modifiedCommentGet = await await commentsRequest.getOne(
+            comment.id,
           );
           const nonModifiedCommentGetJson = await modifiedCommentGet.json();
           expect.soft(nonModifiedCommentGetJson.body).toEqual(commentData.body);
@@ -120,7 +117,7 @@ test.describe(
       test(
         'should partially modify a comment with a logged-in user',
         { tag: ['@GAD-R10-04'] },
-        async ({ request }) => {
+        async ({ commentsRequestLogged }) => {
           // Arrange
           const expectedStatusCode = 200;
           const comment = await responseComment.json();
@@ -128,14 +125,8 @@ test.describe(
             body: `Patched body ${new Date().toISOString()}`,
           };
           // Act
-          const responseCommentModifiedPatched = await request.patch(
-            `${apiUrls.commentsUrl}/${comment.id}`,
-            {
-              headers,
-              data: modifiedCommentData,
-            },
-          );
-
+          const responseCommentModifiedPatched =
+            await commentsRequestLogged.patch(modifiedCommentData, comment.id);
           // Assert
           const actualResponseStatus = responseCommentModifiedPatched.status();
           expect(
@@ -143,8 +134,8 @@ test.describe(
             `expect status code ${expectedStatusCode}, and received ${actualResponseStatus}`,
           ).toBe(expectedStatusCode);
           // Assert after modification comment
-          const modifiedCommentGet = await request.get(
-            `${apiUrls.commentsUrl}/${comment.id}`,
+          const modifiedCommentGet = await commentsRequestLogged.getOne(
+            comment.id,
           );
           const modifiedCommentGetJson = await modifiedCommentGet.json();
           expect
@@ -159,7 +150,7 @@ test.describe(
       test(
         'should not partially modify a comment with a non logged-in user',
         { tag: ['@GAD-R10-04'] },
-        async ({ request }) => {
+        async ({ commentsRequest }) => {
           // Arrange
           const expectedStatusCode = 401;
           const comment = await responseComment.json();
@@ -168,11 +159,9 @@ test.describe(
           };
 
           // Act
-          const responseCommentNotModified = await request.patch(
-            `${apiUrls.commentsUrl}/${comment.id}`,
-            {
-              data: modifiedCommentData,
-            },
+          const responseCommentNotModified = await commentsRequest.patch(
+            modifiedCommentData,
+            comment.id,
           );
 
           // Assert
@@ -183,9 +172,7 @@ test.describe(
           ).toBe(expectedStatusCode);
 
           // Assert non modified comment
-          const modifiedCommentGet = await request.get(
-            `${apiUrls.commentsUrl}/${comment.id}`,
-          );
+          const modifiedCommentGet = await commentsRequest.getOne(comment.id);
           const nonModifiedCommentGetJson = await modifiedCommentGet.json();
           expect.soft(nonModifiedCommentGetJson.body).toEqual(commentData.body);
           expect
@@ -197,7 +184,7 @@ test.describe(
       test(
         'should not partially modify a comment with a non existing field for logged-in user',
         { tag: ['@GAD-R10-04'] },
-        async ({ request }) => {
+        async ({ commentsRequestLogged }) => {
           // Arrange
           const expectedStatusCode = 422;
           const nonExistingField = 'nonExistingField';
@@ -208,12 +195,9 @@ test.describe(
           modifiedCommentData[nonExistingField] = `${new Date().toISOString()}`;
 
           // Act
-          const responseCommentNotModified = await request.patch(
-            `${apiUrls.commentsUrl}/${comment.id}`,
-            {
-              headers,
-              data: modifiedCommentData,
-            },
+          const responseCommentNotModified = await commentsRequestLogged.patch(
+            modifiedCommentData,
+            comment.id,
           );
 
           // Assert
@@ -230,8 +214,8 @@ test.describe(
             .soft(responseCommentNotModifiedJson.error.message)
             .toEqual(expectedErrorMessage);
 
-          const nonModifiedCommentGet = await request.get(
-            `${apiUrls.commentsUrl}/${comment.id}`,
+          const nonModifiedCommentGet = await commentsRequestLogged.getOne(
+            comment.id,
           );
           const nonModifiedCommentGetJson = await nonModifiedCommentGet.json();
           expect.soft(nonModifiedCommentGetJson.body).toEqual(commentData.body);
