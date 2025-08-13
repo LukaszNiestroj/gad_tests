@@ -2,7 +2,6 @@ import { createArticleWithApi } from '@_src/api/factories/article-create.api.fac
 import { createCommentWithApi } from '@_src/api/factories/comment-create.api.factory';
 import { prepareCommentPayload } from '@_src/api/factories/comment-payload.api.factory';
 import { CommentPayload } from '@_src/api/models/comment.api.model';
-import { apiUrls } from '@_src/api/utils/api.util';
 import { expect, test } from '@_src/merge.fixture';
 import { APIResponse } from '@playwright/test';
 
@@ -66,19 +65,15 @@ test.describe(
       test(
         'should not modify a comment with a non logged-in user',
         { tag: ['@GAD-R10-02'] },
-        async ({ request, commentsRequest }) => {
+        async ({ commentsRequest }) => {
           // Arrange
           const expectedStatusCode = 401;
           const comment = await responseComment.json();
           const modifiedCommentData = prepareCommentPayload(articleId);
 
           // Act
-          const responseCommentNotModified = await request.put(
-            `${apiUrls.commentsUrl}/${comment.id}`,
-            {
-              data: modifiedCommentData,
-            },
-          );
+          const responseCommentNotModified =
+            await commentsRequest.put(modifiedCommentData);
 
           // Assert
           const actualResponseStatus = responseCommentNotModified.status();
