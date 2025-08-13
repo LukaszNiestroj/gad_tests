@@ -117,7 +117,7 @@ test.describe(
       test(
         'should partially modify a comment with a logged-in user',
         { tag: ['@GAD-R10-04'] },
-        async ({ commentsRequestLogged }) => {
+        async ({ commentsRequest, commentsRequestLogged }) => {
           // Arrange
           const expectedStatusCode = 200;
           const comment = await responseComment.json();
@@ -134,9 +134,7 @@ test.describe(
             `expect status code ${expectedStatusCode}, and received ${actualResponseStatus}`,
           ).toBe(expectedStatusCode);
           // Assert after modification comment
-          const modifiedCommentGet = await commentsRequestLogged.getOne(
-            comment.id,
-          );
+          const modifiedCommentGet = await commentsRequest.getOne(comment.id);
           const modifiedCommentGetJson = await modifiedCommentGet.json();
           expect
             .soft(modifiedCommentGetJson.body)
