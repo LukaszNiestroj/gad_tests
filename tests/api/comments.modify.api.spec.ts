@@ -182,7 +182,7 @@ test.describe(
       test(
         'should not partially modify a comment with a non existing field for logged-in user',
         { tag: ['@GAD-R10-04'] },
-        async ({ commentsRequestLogged }) => {
+        async ({ commentsRequest, commentsRequestLogged }) => {
           // Arrange
           const expectedStatusCode = 422;
           const nonExistingField = 'nonExistingField';
@@ -212,7 +212,7 @@ test.describe(
             .soft(responseCommentNotModifiedJson.error.message)
             .toEqual(expectedErrorMessage);
 
-          const nonModifiedCommentGet = await commentsRequestLogged.getOne(
+          const nonModifiedCommentGet = await commentsRequest.getOne(
             comment.id,
           );
           const nonModifiedCommentGetJson = await nonModifiedCommentGet.json();
